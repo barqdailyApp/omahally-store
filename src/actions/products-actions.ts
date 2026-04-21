@@ -269,7 +269,15 @@ export async function fetchSingleProduct(productId: string) {
 }
 
 export async function fetchBrands() {
-  const res = await getData<Brand[]>(endpoints.products.brands);
+  const favAddress = await getFavAddress();
+  const searchParams = new URLSearchParams({
+    latitude: favAddress?.latitude || "",
+    longitude: favAddress?.longitude || "",
+  });
+  const res = await getData<Brand[]>(
+    `${endpoints.products.brands}?${searchParams.toString()}`
+  );
+
   if ("error" in res) {
     return res;
   }
