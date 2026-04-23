@@ -270,11 +270,12 @@ export async function fetchBrands() {
   const searchParams = new URLSearchParams({
     latitude: favAddress?.latitude || "",
     longitude: favAddress?.longitude || "",
+    page: "1",
+    limit: "10",
   });
   const res = await getData<Brand[]>(
     `${endpoints.products.brands}?${searchParams.toString()}`
   );
-
   if ("error" in res) {
     return res;
   }
