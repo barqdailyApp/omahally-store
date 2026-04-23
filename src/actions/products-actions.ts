@@ -170,19 +170,16 @@ export async function fetchOffers(page = 1, limit = PRODUCTS_PER_PAGE) {
   const user = cookieStore.get(COOKIES_KEYS.user)?.value;
   const userId = user ? JSON.parse(user).id : null;
 
-  const sectionRes = await fetchSections();
-  const sectionId = "error" in sectionRes ? undefined : sectionRes[0]?.id;
   const favAddress = await getFavAddress();
 
   const searchParams = new URLSearchParams({
     page: String(page),
     limit: String(limit),
     sort: "new",
-    section_id: sectionId || "",
     user_id: userId || "",
+    latitude: favAddress?.latitude || "",
+    longitude: favAddress?.longitude || "",
   });
-  appendFavAddressParams(searchParams, favAddress);
-
   const res = await getData<{ data: Offer[]; meta: { itemCount: number } }>(
     `${endpoints.products.offers}?${searchParams.toString()}`
   );
