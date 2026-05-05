@@ -3,6 +3,7 @@ import "swiper/css/pagination";
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 
+import { getAppTheme } from "@/actions/theme";
 import { LocaleType } from "@/i18n/config-locale";
 
 import BrandsView from "@/sections/home/view/brands-view";
@@ -18,6 +19,14 @@ import CategoriesLoading from "@/sections/home/loading/categories-loading";
 import CollectionsLoading from "@/sections/home/loading/collections-loading";
 
 export default async function Page() {
+  const theme = await getAppTheme();
+  let showOffers = true;
+  let showOrderAgain = true;
+  if (!("error" in theme)) {
+    showOffers = theme.data?.theme.show_offers || true;
+    showOrderAgain = theme.data?.theme.order_again || true;
+  }
+
   return (
     <>
       <Suspense fallback={<BannersLoading />}>
@@ -40,13 +49,17 @@ export default async function Page() {
         <CollectionsView filter="lower" />
       </Suspense>
 
-      <Suspense fallback={<OffersLoading />}>
-        <OffersView />
-      </Suspense>
+      {showOffers && (
+        <Suspense fallback={<OffersLoading />}>
+          <OffersView />
+        </Suspense>
+      )}
 
-      <Suspense fallback={<OffersLoading />}>
-        <OrderAgainView />
-      </Suspense>
+      {showOrderAgain && (
+        <Suspense fallback={<OffersLoading />}>
+          <OrderAgainView />
+        </Suspense>
+      )}
     </>
   );
 }
