@@ -8,5 +8,7 @@ export interface AppTheme {
     splash_screen: string;
     primary_color: string;
     secondary_color: string;
+    show_offers: boolean;
+    order_again: boolean;
   };
 }
