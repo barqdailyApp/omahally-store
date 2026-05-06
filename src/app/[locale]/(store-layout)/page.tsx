@@ -23,8 +23,8 @@ export default async function Page() {
   let showOffers = true;
   let showOrderAgain = true;
   if (!("error" in theme)) {
-    showOffers = theme.data?.theme.show_offers || true;
-    showOrderAgain = theme.data?.theme.order_again || true;
+    showOffers = theme.data?.theme.show_offer ?? true;
+    showOrderAgain = theme.data?.theme.order_again ?? true;
   }
 
   return (
