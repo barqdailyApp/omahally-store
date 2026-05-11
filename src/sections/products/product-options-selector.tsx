@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { useSnackbar } from "notistack";
 import { useTranslations } from "next-intl";
 
 import {
@@ -16,31 +17,33 @@ import {
 
 import { useCurrency } from "@/utils/format-number";
 
+import { updateCartProductOptions } from "@/actions/cart-actions";
+
 import { ProductOptionGroup } from "@/types/products";
 
-interface Props {
-  optionGroups: ProductOptionGroup[];
-  selectedOptions: string[];
-  onOptionsChange: (options: string[]) => void;
-}
+import { useProductFormStore } from "./store/product-form-store";
 
-export default function ProductOptionsSelector({
-  optionGroups,
-  selectedOptions,
-  onOptionsChange,
-}: Props) {
+export default function ProductOptionsSelector() {
   const t = useTranslations("Pages.Home.Product.Options");
   const currency = useCurrency();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const {
+    product,
+    cartProduct,
+    selectedOptions,
+    setSelectedOptions,
+    setCartProduct,
+  } = useProductFormStore();
 
   const handleOptionToggle = useCallback(
-    (optionId: string, group: ProductOptionGroup) => {
+    async (optionId: string, group: ProductOptionGroup) => {
       const isSelected = selectedOptions.includes(optionId);
       const groupSelectedOptions = selectedOptions.filter((id) =>
-        group.options.some((opt) => opt.id === id)
+        group.options.some((opt) => opt.id === id),
       );
 
       let newSelectedOptions: string[];
-
       if (isSelected) {
         // Remove option and its child group selections if any
         newSelectedOptions = selectedOptions.filter((id) => id !== optionId);
@@ -50,10 +53,27 @@ export default function ProductOptionsSelector({
           option.child_groups.forEach((childGroup) => {
             childGroup.options.forEach((childOpt) => {
               newSelectedOptions = newSelectedOptions.filter(
-                (id) => id !== childOpt.id
+                (id) => id !== childOpt.id,
               );
             });
           });
+        }
+
+        setSelectedOptions(newSelectedOptions);
+        if (!cartProduct) {
+          return;
+        }
+
+        const res = await updateCartProductOptions(
+          cartProduct.id,
+          newSelectedOptions,
+        );
+
+        if ("error" in res) {
+          setSelectedOptions([...newSelectedOptions, optionId]);
+          enqueueSnackbar(res.error, { variant: "error" });
+        } else {
+          setCartProduct(res);
         }
       } else {
         // Add option
@@ -67,20 +87,43 @@ export default function ProductOptionsSelector({
           // Remove the first selected option in this group if we exceed max
           const firstSelected = groupSelectedOptions[0];
           newSelectedOptions = newSelectedOptions.filter(
-            (id) => id !== firstSelected
+            (id) => id !== firstSelected,
           );
         }
-      }
 
-      onOptionsChange(newSelectedOptions);
+        setSelectedOptions(newSelectedOptions);
+        if (!cartProduct) {
+          return;
+        }
+
+        const res = await updateCartProductOptions(
+          cartProduct.id,
+          newSelectedOptions,
+        );
+
+        if ("error" in res) {
+          setSelectedOptions(
+            newSelectedOptions.filter((id) => id !== optionId),
+          );
+          enqueueSnackbar(res.error, { variant: "error" });
+        } else {
+          setCartProduct(res);
+        }
+      }
     },
-    [selectedOptions, onOptionsChange]
+    [
+      selectedOptions,
+      setSelectedOptions,
+      cartProduct,
+      enqueueSnackbar,
+      setCartProduct,
+    ],
   );
 
   const getGroupValidation = useCallback(
     (group: ProductOptionGroup) => {
       const groupSelectedOptions = selectedOptions.filter((id) =>
-        group.options.some((opt) => opt.id === id)
+        group.options.some((opt) => opt.id === id),
       );
       const selectedCount = groupSelectedOptions.length;
 
@@ -104,7 +147,7 @@ export default function ProductOptionsSelector({
         error,
       };
     },
-    [selectedOptions, t]
+    [selectedOptions, t],
   );
 
   const getChildGroupValidation = useCallback(
@@ -115,7 +158,7 @@ export default function ProductOptionsSelector({
       }
 
       const childSelectedOptions = selectedOptions.filter((id) =>
-        childGroup.options.some((opt) => opt.id === id)
+        childGroup.options.some((opt) => opt.id === id),
       );
       const selectedCount = childSelectedOptions.length;
 
@@ -140,12 +183,12 @@ export default function ProductOptionsSelector({
         error,
       };
     },
-    [selectedOptions, t]
+    [selectedOptions, t],
   );
 
   return (
     <Stack spacing={3}>
-      {optionGroups.map((group) => {
+      {product.product.product_option_groups.map((group) => {
         const validation = getGroupValidation(group);
 
         return (
@@ -205,15 +248,17 @@ export default function ProductOptionsSelector({
                       label={
                         <Stack direction="row" alignItems="center" spacing={1}>
                           <Typography>{option.name}</Typography>
-                          {option.price && parseFloat(option.price) !== 0 && (
-                            <Typography
-                              variant="caption"
-                              color="primary"
-                              sx={{ fontWeight: 600 }}
-                            >
-                              +{currency(option.price)}
-                            </Typography>
-                          )}
+                          {group.show_price &&
+                            option.price &&
+                            parseFloat(option.price) !== 0 && (
+                              <Typography
+                                variant="caption"
+                                color="primary"
+                                sx={{ fontWeight: 600 }}
+                              >
+                                +{currency(option.price)}
+                              </Typography>
+                            )}
                           {option.is_default && (
                             <Typography
                               variant="caption"
@@ -233,10 +278,10 @@ export default function ProductOptionsSelector({
                           {option.child_groups?.map((childGroup) => {
                             const childVal = getChildGroupValidation(
                               childGroup,
-                              option.id
+                              option.id,
                             );
                             const isParentSelected = selectedOptions.includes(
-                              option.id
+                              option.id,
                             );
 
                             return (
@@ -306,7 +351,7 @@ export default function ProductOptionsSelector({
                                             onChange={() =>
                                               handleOptionToggle(
                                                 childOption.id,
-                                                childGroup
+                                                childGroup,
                                               )
                                             }
                                           />

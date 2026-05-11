@@ -26,6 +26,9 @@ export default function CartItem({ product }: { product: CartProduct }) {
   const t = useTranslations("Pages.Orders.Single.Shipment");
   const tCart = useTranslations("Pages.Cart");
   const currency = useCurrency();
+  const unitPrice = product.product_price + product.hidden_options_price;
+
+  const totalPrice = (unitPrice + product.options_price) * product.quantity;
 
   const renderTopRow = (
     <Stack direction="row" alignItems="center" spacing={2}>
@@ -73,36 +76,39 @@ export default function CartItem({ product }: { product: CartProduct }) {
             component="span"
             color="primary"
           >
-            {`${currency(product.price)} / `}
+            {currency(unitPrice)}
           </Typography>
-          {product.unit}
         </Typography>
         {/* Display Options */}
-        {product.options && product.options.length > 0 && (
+        {product.product_option_groups.length > 0 && (
           <Stack direction="row" spacing={0.5} mt={1} flexWrap="wrap" gap={0.5}>
-            {product.options.map((option) => (
-              <Chip
-                key={option.id}
-                label={
-                  <Typography variant="caption">
-                    {option.name}
-                    {option.price > 0 && (
-                      <Typography
-                        variant="caption"
-                        component="span"
-                        color="primary"
-                        sx={{ ml: 0.5, fontWeight: 600 }}
-                      >
-                        +{currency(option.price, false)}
+            {product.product_option_groups.flatMap((group) =>
+              group.options
+                .filter((option) => option.is_selected)
+                .map((option) => (
+                  <Chip
+                    key={group.id}
+                    label={
+                      <Typography variant="caption">
+                        {option.name}
+                        {group.show_price && Number(option.price) > 0 && (
+                          <Typography
+                            variant="caption"
+                            component="span"
+                            color="primary"
+                            sx={{ ml: 0.5, fontWeight: 600 }}
+                          >
+                            +{currency(option.price, false)}
+                          </Typography>
+                        )}
                       </Typography>
-                    )}
-                  </Typography>
-                }
-                size="small"
-                variant="outlined"
-                sx={{ height: "auto", py: 0.5 }}
-              />
-            ))}
+                    }
+                    size="small"
+                    variant="outlined"
+                    sx={{ height: "auto", py: 0.5 }}
+                  />
+                )),
+            )}
           </Stack>
         )}
       </Box>
@@ -119,7 +125,7 @@ export default function CartItem({ product }: { product: CartProduct }) {
       <Typography variant="subtitle2">
         {`${t("total")} : `}
         <Typography variant="inherit" fontWeight="700" component="span">
-          {currency(product.price * product.quantity)}
+          {currency(totalPrice)}
         </Typography>
       </Typography>
 
@@ -133,6 +139,17 @@ export default function CartItem({ product }: { product: CartProduct }) {
             sx={{ flexShrink: 0 }}
           >
             <Iconify icon="gridicons:external" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={tCart("update_item") || "Update Item"}>
+          <IconButton
+            component={RouterLink}
+            href={`${paths.cart}/${product.id}`}
+            size="small"
+            color="primary"
+            sx={{ flexShrink: 0 }}
+          >
+            <Iconify icon="boxicons:edit" />
           </IconButton>
         </Tooltip>
 

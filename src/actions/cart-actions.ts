@@ -21,6 +21,18 @@ export async function fetchCartProducts() {
   return res?.data;
 }
 
+export async function fetchCartProductById(cart_product_id: string) {
+  const res = await getData<CartProduct>(
+    endpoints.cart.fetchProductById(cart_product_id),
+  );
+
+  if ("error" in res) {
+    return res;
+  }
+
+  return res?.data;
+}
+
 export async function addProductToCart(body: {
   product_category_price_id: string;
   options: string[];
@@ -61,6 +73,24 @@ export async function updateCartProduct(
       quantity: number;
     }
   >(endpoints.cart.update, "PUT", { cart_product_id, quantity });
+
+  if ("error" in res) {
+    return res;
+  }
+  return res?.data;
+}
+
+export async function updateCartProductOptions(
+  cart_product_id: string,
+  options: string[],
+) {
+  const res = await editData<
+    CartProduct,
+    {
+      cart_product_id: string;
+      options: string[];
+    }
+  >(endpoints.cart.update, "PUT", { cart_product_id, options });
 
   if ("error" in res) {
     return res;

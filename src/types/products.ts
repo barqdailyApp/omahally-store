@@ -90,6 +90,7 @@ export interface ProductOptionGroup {
   max_selection: number;
   order_by: number;
   options: ProductOption[];
+  show_price: boolean;
 }
 export interface ProductOption {
   id: string;
