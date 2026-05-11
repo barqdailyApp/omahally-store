@@ -6,7 +6,9 @@ export interface CartProduct {
   name: string;
   section_id: string;
   description: string;
-  original_price: number;
+  product_price: number;
+  hidden_options_price: number;
+  options_price: number;
   price: number;
   quantity: number;
   unit: string;
@@ -18,6 +20,31 @@ export interface CartProduct {
   additional_services: any[];
   image: string;
   options?: { id: string; price: number; name: string }[];
+  product_option_groups: CartItemOptionsGroup[];
+}
+
+export interface CartItemOptionsGroup {
+  id: string;
+  option_group_id: string;
+  name: string;
+  name_en: string;
+  min_selection: number;
+  max_selection: number;
+  show_price: boolean;
+  order_by: number;
+  options: Option[];
+}
+
+export interface Option {
+  id: string;
+  option_id: string;
+  name: string;
+  name_en: string;
+  price: string;
+  is_default: boolean;
+  is_selected: boolean;
+  order_by: number;
+  child_groups?: CartItemOptionsGroup[];
 }
 
 export interface PromoCode {
@@ -67,9 +94,7 @@ export const useCartStore = create<InitialState & CartStateActions>()(
         const updatedProducts = state.products.map((product) => {
           if (product.id === newProduct.id) {
             isProductExist = true;
-            priceDiff =
-              newProduct.original_price * newProduct.quantity -
-              product.original_price * product.quantity;
+            priceDiff = newProduct.price - product.price;
             return { ...product, ...newProduct };
           }
           return product;
@@ -85,35 +110,28 @@ export const useCartStore = create<InitialState & CartStateActions>()(
                 products: [...updatedProducts, newProduct],
                 productsQuantity: state.productsQuantity + 1,
                 totalPrice:
-                  state.totalPrice +
-                  newProduct.original_price * newProduct.quantity,
+                  state.totalPrice + newProduct.price * newProduct.quantity,
               }),
         };
       }),
     removeProduct: (id) =>
       set((state) => {
-        const oldProduct = state.products.find(
-          (product) => product.id === id
-        ) || { original_price: 0, quantity: 0 };
+        const oldProduct = state.products.find((product) => product.id === id);
 
         return {
           products: state.products.filter((product) => product.id !== id),
           productsQuantity: state.productsQuantity - 1,
-          totalPrice:
-            state.totalPrice - oldProduct.original_price * oldProduct.quantity,
+          totalPrice: state.totalPrice - (oldProduct?.price || 0),
         };
       }),
     initProducts: (products) => {
       set({
         products,
         productsQuantity: products.length,
-        totalPrice: products.reduce(
-          (acc, product) => acc + product.original_price * product.quantity,
-          0
-        ),
+        totalPrice: products.reduce((acc, product) => acc + product.price, 0),
       });
     },
     setMinOrderPrice: (price) => set({ minOrderPrice: price }),
     setDeliveryFee: (fee) => set({ deliveryFee: fee }),
-  })
+  }),
 );

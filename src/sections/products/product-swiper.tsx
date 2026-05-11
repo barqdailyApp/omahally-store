@@ -48,7 +48,6 @@ export default function ProductSwiper({ images }: { images: string[] }) {
               <Button
                 variant="outlined"
                 onClick={() => {
-                  console.log(index);
                   swiper?.slideTo(index);
                 }}
                 color={active === index ? "primary" : "inherit"}

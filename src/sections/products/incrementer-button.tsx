@@ -10,6 +10,8 @@ import { removeCartProduct, updateCartProduct } from "@/actions/cart-actions";
 
 import Iconify from "@/components/iconify";
 
+import { useProductFormStore } from "./store/product-form-store";
+
 // ----------------------------------------------------------------------
 
 interface Props extends StackProps {
@@ -34,6 +36,7 @@ const IncrementerButton = forwardRef<HTMLDivElement, Props>(
   ) => {
     const { enqueueSnackbar } = useSnackbar();
     const { products, setProduct, removeProduct } = useCartStore();
+    const { setCartProduct } = useProductFormStore();
     const [loading, setLoading] = useState(false);
 
     const product = products.find((item) => item.id === cartProductId);
@@ -69,10 +72,11 @@ const IncrementerButton = forwardRef<HTMLDivElement, Props>(
         } else {
           delete res.options;
           setProduct(res);
+          setCartProduct(res);
         }
         setLoading(false);
       })();
-    }, [enqueueSnackbar, product, quantity, setProduct]);
+    }, [enqueueSnackbar, product, quantity, setCartProduct, setProduct]);
 
     const handleDecrease = useCallback(() => {
       if (!product) return;

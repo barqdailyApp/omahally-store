@@ -1,23 +1,24 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 
 import {
   Box,
   Card,
   Stack,
+  Button,
   Container,
   Typography,
   CardContent,
-  Button,
 } from "@mui/material";
 
 import { RouterLink } from "@/routes/components";
 
 import { useCurrency } from "@/utils/format-number";
 
-import { useCartStore } from "@/contexts/cart-store";
 import { SECTION_PADDING } from "@/layouts/config-layout";
+import { CartProduct, useCartStore } from "@/contexts/cart-store";
 
 import Label from "@/components/label";
 import Iconify from "@/components/iconify";
@@ -28,34 +29,91 @@ import { FullProduct, ProductMeasurement } from "@/types/products";
 
 import ProductFavButton from "../fav-button";
 import ProductSwiper from "../product-swiper";
+import { useProductFormStore } from "../store/product-form-store";
 
 interface Props {
   product: FullProduct;
+  cartProduct?: CartProduct;
 }
 
-export default function SingleProductView({
-  product: { product, product_measurements },
-}: Props) {
+export default function SingleProductView({ product, cartProduct }: Props) {
   const t = useTranslations("Pages.Home.Product");
   const currency = useCurrency();
   const { products } = useCartStore();
+  const {
+    setProduct,
+    setCartProduct,
+    product: stateProduct,
+    cartProduct: stateCartProduct,
+    selectedOptions,
+  } = useProductFormStore();
+
+  useEffect(() => {
+    setProduct(product);
+    if (cartProduct) {
+      setCartProduct(cartProduct);
+    }
+  }, [product, cartProduct, setProduct, setCartProduct]);
+
   const isInCart = products.some(
-    (item) => item.product_id === product.product_id,
+    (item) => item.product_id === product.product.product_id,
   );
 
   const measurement =
-    product_measurements.find((item) => item.is_main_unit) ||
+    product.product_measurements?.find((item) => item.is_main_unit) ||
     ({} as ProductMeasurement);
   const offerPrice = measurement.offer?.offer_price;
-  const originalPrice = measurement.product_category_price.product_price;
+  const originalPrice = measurement.product_category_price?.product_price;
   const finalPrice = offerPrice ?? originalPrice;
+  const parsedFinalPrice = Number(finalPrice) || 0;
+  const [unitPrice, setUnitPrice] = useState(parsedFinalPrice);
 
-  const renderSwiper = <ProductSwiper images={product.product_images} />;
+  useEffect(() => {
+    if (stateCartProduct) {
+      setUnitPrice(
+        stateCartProduct.product_price + stateCartProduct.hidden_options_price,
+      );
+    } else if (stateProduct) {
+      const selected = new Set(selectedOptions);
+      let price = Number(finalPrice) || 0;
+      stateProduct.product?.product_option_groups.forEach((group) => {
+        group.options.forEach((option) => {
+          if (selected.has(option.id) && !group.show_price) {
+            price += parseFloat(option.price) || 0;
+          }
+          option.child_groups?.forEach((childGroup) => {
+            childGroup.options.forEach((childOption) => {
+              if (selected.has(childOption.id) && !group.show_price) {
+                price += parseFloat(childOption.price) || 0;
+              }
+            });
+          });
+        });
+      });
+      setUnitPrice(price);
+    } else {
+      setUnitPrice(parsedFinalPrice);
+    }
+  }, [
+    finalPrice,
+    parsedFinalPrice,
+    selectedOptions,
+    stateCartProduct,
+    stateProduct,
+  ]);
+
+  useEffect(() => {
+    setUnitPrice(parsedFinalPrice);
+  }, [parsedFinalPrice]);
+
+  const renderSwiper = (
+    <ProductSwiper images={product.product.product_images} />
+  );
 
   const renderContent = (
     <Box>
       <Typography variant="h4" component="p">
-        {product.product_name}
+        {product.product.product_name}
       </Typography>
       <Typography variant="h6">{measurement.measurement_unit}</Typography>
       <Typography
@@ -70,18 +128,19 @@ export default function SingleProductView({
             {currency(originalPrice, false)}
           </Typography>
         )}{" "}
-        {currency(finalPrice)}
+        {currency(unitPrice)}
       </Typography>
-      {!product.is_quantity_available && (
+      {!product.product.is_quantity_available && (
         <Label color="error">{t("no_available")}</Label>
       )}
-      {product.type === "BUNDLE" && product.components?.length ? (
+      {product.product.type === "BUNDLE" &&
+      product.product.components?.length ? (
         <Box mb={1}>
           <Typography variant="subtitle2" gutterBottom>
             {t("components")}
           </Typography>
           <Stack spacing={0.5}>
-            {product.components.map((component) => (
+            {product.product.components.map((component) => (
               <Typography key={component.component_id} variant="body2">
                 {component.quantity} × {component.component_name}
               </Typography>
@@ -90,7 +149,7 @@ export default function SingleProductView({
         </Box>
       ) : null}
       <Typography color="text.disabled">
-        {product.product_description}
+        {product.product.product_description}
       </Typography>
     </Box>
   );
@@ -104,9 +163,9 @@ export default function SingleProductView({
       pt={1}
     >
       <ProductFavButton
-        isFav={product.product_is_fav}
-        productId={product.product_id}
-        sectionId={product.section_id}
+        isFav={product.product.product_is_fav}
+        productId={product.product.product_id}
+        sectionId={product.product.section_id}
         sx={{ alignSelf: "stretch" }}
       />
 
@@ -123,15 +182,8 @@ export default function SingleProductView({
         </Button>
       )}
 
-      {(product.product_option_groups?.length || 0) === 0 ? (
-        <ProductAddForm
-          product_id={product.product_id}
-          product_category_price_id={
-            measurement.product_category_price.product_category_price_id
-          }
-          is_quantity_available={product.is_quantity_available}
-          optionGroups={product.product_option_groups || []}
-        />
+      {(product.product.product_option_groups?.length || 0) === 0 ? (
+        <ProductAddForm />
       ) : null}
     </Stack>
   );
@@ -152,20 +204,13 @@ export default function SingleProductView({
             </CardContent>
           </Card>
 
-          {product.product_option_groups?.length > 0 ? (
+          {product.product.product_option_groups?.length > 0 ? (
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
                   {t("options")}
                 </Typography>
-                <ProductAddForm
-                  product_id={product.product_id}
-                  product_category_price_id={
-                    measurement.product_category_price.product_category_price_id
-                  }
-                  is_quantity_available={product.is_quantity_available}
-                  optionGroups={product.product_option_groups || []}
-                />
+                <ProductAddForm full />
               </CardContent>
             </Card>
           ) : null}
