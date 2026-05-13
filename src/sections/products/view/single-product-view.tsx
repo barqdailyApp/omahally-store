@@ -115,7 +115,6 @@ export default function SingleProductView({ product, cartProduct }: Props) {
       <Typography variant="h4" component="p">
         {product.product.product_name}
       </Typography>
-      <Typography variant="h6">{measurement.measurement_unit}</Typography>
       <Typography
         variant="h5"
         color="primary"
