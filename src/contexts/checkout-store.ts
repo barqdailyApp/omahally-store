@@ -41,6 +41,10 @@ interface InitialState {
   paymentForm: PaymentForm;
 
   orderId: string | null;
+
+  taxRate: string | null;
+
+  isDigital: boolean;
 }
 
 interface CheckoutStateActions {
@@ -72,6 +76,10 @@ interface CheckoutStateActions {
   ) => void;
 
   setOrderId: (orderId: string | null) => void;
+
+  setTaxRate: (taxRate: string | null) => void;
+
+  setIsDigital: (is_digital: boolean) => void;
 }
 
 const initialState: InitialState = {
@@ -99,6 +107,10 @@ const initialState: InitialState = {
   paymentForm: { notes: "" },
 
   orderId: null,
+
+  taxRate: null,
+
+  isDigital: false,
 };
 
 export const usecheckoutStore = create<InitialState & CheckoutStateActions>()(
@@ -173,5 +185,7 @@ export const usecheckoutStore = create<InitialState & CheckoutStateActions>()(
       })),
 
     setOrderId: (orderId) => set(() => ({ orderId })),
+    setTaxRate: (taxRate) => set(() => ({ taxRate })),
+    setIsDigital: (isDigital) => set(() => ({ isDigital })),
   }),
 );

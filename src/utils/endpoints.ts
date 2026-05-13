@@ -30,6 +30,7 @@ export const endpoints = {
   },
   cart: {
     fetchProducts: "cart",
+    withWarehouse: "cart/with-warehouse",
     fetchProductById: (cart_product_id: string) => `cart/${cart_product_id}`,
     add: "cart/add",
     delete: (cart_product_id: string) => `cart/delete/${cart_product_id}`,

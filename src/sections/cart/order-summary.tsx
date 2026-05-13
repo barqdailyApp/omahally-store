@@ -29,13 +29,37 @@ export default function OrderSumamry() {
   const dir = useDir();
   const currency = useCurrency();
   const formateDate = useFormatDate();
-  const { step, setStep, choosenDeliveryType, day, timeSlot, choosenAddress } =
-    usecheckoutStore();
-  const { totalPrice, minOrderPrice, deliveryFee, promocode } = useCartStore();
+  const {
+    step,
+    setStep,
+    choosenDeliveryType,
+    day,
+    timeSlot,
+    choosenAddress,
+    taxRate,
+    isDigital,
+  } = usecheckoutStore();
+  const {
+    totalPrice,
+    minOrderPrice,
+    deliveryFee: initDeliveryFee,
+    promocode,
+  } = useCartStore();
+
+  const deliveryFee = useMemo(
+    () => (isDigital ? 0 : initDeliveryFee),
+    [initDeliveryFee, isDigital],
+  );
+
+  const { totalWithDiscount, discount } = useMemo(() => {
+    const _discount = promocode?.discount || 0;
+    return {
+      totalWithDiscount: (totalPrice * (100 - _discount)) / 100,
+      discount: _discount,
+    };
+  }, [totalPrice, promocode?.discount]);
 
   const fields = useMemo(() => {
-    const discount = promocode?.discount || 0;
-
     const items: {
       label?: string;
       value: React.ReactNode;
@@ -48,20 +72,42 @@ export default function OrderSumamry() {
         color: totalPrice < minOrderPrice ? "error" : undefined,
         fontWeight: totalPrice < minOrderPrice ? 700 : undefined,
       },
-      {
-        label: t("Summary.min-order-price"),
-        value: currency(minOrderPrice),
-      },
+      ...(minOrderPrice > totalPrice
+        ? [
+            {
+              label: t("Summary.min-order-price"),
+              value: currency(minOrderPrice),
+              color: "error" as LabelColor,
+            },
+          ]
+        : []),
       ...(discount
         ? [{ label: t("PromoCode.label"), value: `${discount}%` }]
         : []),
-      {
-        label: t("Summary.shipping"),
-        value: currency(deliveryFee),
-      },
+      ...(deliveryFee
+        ? [
+            {
+              label: t("Summary.shipping"),
+              value: currency(deliveryFee),
+            },
+          ]
+        : []),
+      ...(Number(taxRate ?? 0)
+        ? [
+            {
+              label: t("Summary.tax_rate"),
+              value: `${Number(taxRate ?? 0)}% (${currency((Number(taxRate ?? 0) / 100) * totalWithDiscount)})`,
+            },
+          ]
+        : []),
+
       {
         label: t("Summary.total"),
-        value: currency((totalPrice * (100 - discount)) / 100 + deliveryFee),
+        value: currency(
+          totalWithDiscount +
+            deliveryFee +
+            (Number(taxRate ?? 0) / 100) * totalWithDiscount,
+        ),
       },
       { value: <PromoCodeField /> },
     ];
@@ -95,20 +141,22 @@ export default function OrderSumamry() {
 
     return items;
   }, [
-    choosenAddress?.name,
-    choosenDeliveryType,
-    currency,
-    day,
-    deliveryFee,
-    formateDate,
-    minOrderPrice,
-    promocode?.discount,
-    step,
     t,
-    timeSlot?.end_time,
-    timeSlot?.start_time,
-    timeSlot?.time_zone,
+    currency,
     totalPrice,
+    minOrderPrice,
+    discount,
+    deliveryFee,
+    taxRate,
+    totalWithDiscount,
+    step,
+    choosenDeliveryType,
+    formateDate,
+    day,
+    timeSlot?.start_time,
+    timeSlot?.end_time,
+    timeSlot?.time_zone,
+    choosenAddress?.name,
   ]);
 
   const renderFields = (
@@ -166,7 +214,8 @@ export default function OrderSumamry() {
           onClick={() => setStep((prev) => prev + 1)}
           sx={{ flexGrow: 1 }}
           disabled={
-            totalPrice < minOrderPrice || (!choosenDeliveryType && step >= 1)
+            totalPrice < minOrderPrice ||
+            (!choosenDeliveryType && !isDigital && step >= 1)
           }
         >
           {t("Summary.next")}
