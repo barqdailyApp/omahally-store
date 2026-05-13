@@ -94,7 +94,15 @@ export const useCartStore = create<InitialState & CartStateActions>()(
         const updatedProducts = state.products.map((product) => {
           if (product.id === newProduct.id) {
             isProductExist = true;
-            priceDiff = newProduct.price - product.price;
+            priceDiff =
+              (newProduct.product_price +
+                newProduct.hidden_options_price +
+                newProduct.options_price) *
+                newProduct.quantity -
+              (product.product_price +
+                product.hidden_options_price +
+                product.options_price) *
+                product.quantity;
             return { ...product, ...newProduct };
           }
           return product;
@@ -110,7 +118,11 @@ export const useCartStore = create<InitialState & CartStateActions>()(
                 products: [...updatedProducts, newProduct],
                 productsQuantity: state.productsQuantity + 1,
                 totalPrice:
-                  state.totalPrice + newProduct.price * newProduct.quantity,
+                  state.totalPrice +
+                  (newProduct.product_price +
+                    newProduct.hidden_options_price +
+                    newProduct.options_price) *
+                    newProduct.quantity,
               }),
         };
       }),
@@ -118,17 +130,32 @@ export const useCartStore = create<InitialState & CartStateActions>()(
       set((state) => {
         const oldProduct = state.products.find((product) => product.id === id);
 
+        const oldProductPrice = oldProduct
+          ? (oldProduct.product_price +
+              oldProduct.hidden_options_price +
+              oldProduct.options_price) *
+            oldProduct.quantity
+          : 0;
+
         return {
           products: state.products.filter((product) => product.id !== id),
           productsQuantity: state.productsQuantity - 1,
-          totalPrice: state.totalPrice - (oldProduct?.price || 0),
+          totalPrice: state.totalPrice - oldProductPrice,
         };
       }),
     initProducts: (products) => {
       set({
         products,
         productsQuantity: products.length,
-        totalPrice: products.reduce((acc, product) => acc + product.price, 0),
+        totalPrice: products.reduce(
+          (acc, product) =>
+            acc +
+            (product.product_price +
+              product.hidden_options_price +
+              product.options_price) *
+              product.quantity,
+          0,
+        ),
       });
     },
     setMinOrderPrice: (price) => set({ minOrderPrice: price }),
