@@ -9,25 +9,33 @@ import { fetchSections } from "@/actions/products-actions";
 import { fetchAddresses } from "@/actions/profile-actions";
 import { getCurrencies } from "@/actions/currency-actions";
 import { usecheckoutStore } from "@/contexts/checkout-store";
-import { fetchPayments, fetchCartProducts } from "@/actions/cart-actions";
+import { fetchPayments, fetchFullCart } from "@/actions/cart-actions";
 
 export default function InitCart() {
   const { authenticated } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const { initProducts } = useCartStore();
-  const { setAddresses, setDeliveryTypes, setPayments, setCurrencies } =
-    usecheckoutStore();
+  const {
+    setAddresses,
+    setDeliveryTypes,
+    setPayments,
+    setCurrencies,
+    setIsDigital,
+    setTaxRate,
+  } = usecheckoutStore();
 
   useEffect(() => {
     if (!authenticated) return;
     (async () => {
-      const cartRes = await fetchCartProducts();
+      const cartRes = await fetchFullCart();
 
       if ("error" in cartRes) {
         if (cartRes.status !== 401)
           enqueueSnackbar(cartRes.error, { variant: "error" });
       } else {
-        initProducts(cartRes);
+        initProducts(cartRes.products);
+        setIsDigital(cartRes.is_digital);
+        setTaxRate(cartRes.warehouse.tax_rate);
       }
 
       const sectionRes = await fetchSections();
@@ -73,7 +81,9 @@ export default function InitCart() {
     setAddresses,
     setCurrencies,
     setDeliveryTypes,
+    setIsDigital,
     setPayments,
+    setTaxRate,
   ]);
 
   return null;

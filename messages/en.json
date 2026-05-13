@@ -274,7 +274,8 @@
         "delivery-address": "Delivery Address",
         "total": "Total",
         "next": "Next",
-        "finish": "Buy Now"
+        "finish": "Buy Now",
+        "tax_rate": "Tax Rate"
       },
       "PromoCode": {
         "label": "Promo Code",

@@ -24,7 +24,7 @@ export default function Cart({
   const t = useTranslations("Pages.Cart");
 
   const { products } = useCartStore();
-  const { step, setStep, choosenAddress } = usecheckoutStore();
+  const { step, setStep, choosenAddress, isDigital } = usecheckoutStore();
 
   const balance = useMemo(
     () =>
@@ -54,7 +54,7 @@ export default function Cart({
 
   const stepsElements = [
     <CartStep />,
-    <TimeLocationStep />,
+    ...(isDigital ? [] : [<TimeLocationStep />]),
     <PaymentStep balance={balance} />,
   ];
 
