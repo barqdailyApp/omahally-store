@@ -96,7 +96,7 @@ export default function OrderSumamry() {
         ? [
             {
               label: t("Summary.tax_rate"),
-              value: `${Number(taxRate ?? 0)}% (${currency((Number(taxRate ?? 0) / 100) * totalWithDiscount)})`,
+              value: `${Number(taxRate ?? 0)}% (${currency((Number(taxRate ?? 0) / 100) * (totalWithDiscount + deliveryFee))})`,
             },
           ]
         : []),
