@@ -309,16 +309,29 @@ export function ProductCard({
           gap={1}
           sx={{ flexGrow: 1 }}
         >
-          <Stack
+          <Box
             sx={{
               alignSelf: "stretch",
+              display: "grid",
+              gridTemplateRows: "auto auto",
+              alignContent: "space-between",
             }}
           >
             <Typography
               variant="body1"
               fontWeight={600}
               component="p"
-              sx={{ flex: "1 1 auto", minWidth: 0 }}
+              sx={{
+                flex: "1 1 auto",
+                minWidth: 0,
+                "-webkit-line-clamp": "2",
+                display: "-webkit-box",
+                "-webkit-box-orient": "vertical",
+                overflow: "hidden",
+                minHeight: 0,
+                height: "fit-content",
+                alignSelf: "flex-start",
+              }}
             >
               {product.product_name}
             </Typography>
@@ -337,7 +350,7 @@ export function ProductCard({
                 {currency(finalPrice)}
               </span>
             </Typography>
-          </Stack>
+          </Box>
           <Box
             sx={{
               position: "relative",
