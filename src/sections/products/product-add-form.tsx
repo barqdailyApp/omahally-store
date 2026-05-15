@@ -1,6 +1,7 @@
 "use client";
 
 import { useSnackbar } from "notistack";
+import { getCookie } from "cookies-next";
 import { useTranslations } from "next-intl";
 import { useMemo, useState, useEffect, useCallback } from "react";
 
@@ -10,6 +11,7 @@ import { Stack, Typography, useMediaQuery } from "@mui/material";
 import { useCurrency } from "@/utils/format-number";
 
 import { useAuthContext } from "@/auth/hooks";
+import { COOKIES_KEYS } from "@/config-global";
 import { useCartStore } from "@/contexts/cart-store";
 import { useNoGuestStore } from "@/contexts/no-guest";
 import { addProductToCart } from "@/actions/cart-actions";
@@ -235,11 +237,14 @@ export default function ProductAddForm({ full = false }: { full?: boolean }) {
 
     setLoading(true);
     try {
+      const warehouseId = getCookie(COOKIES_KEYS.warehouseId);
+
       // Add single item to cart
       const res = await addProductToCart({
         product_category_price_id:
           measurement.product_category_price?.product_category_price_id,
         options: selectedOptions,
+        ...(warehouseId ? { warehouse_id: warehouseId } : {}),
       });
 
       if ("error" in res) {

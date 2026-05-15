@@ -10,5 +10,6 @@ export interface AppTheme {
     secondary_color: string;
     show_offer: boolean;
     order_again: boolean;
+    is_address_required: boolean;
   };
 }

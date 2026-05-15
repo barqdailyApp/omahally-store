@@ -25,7 +25,8 @@ export async function getAppTheme() {
   const res = await getData<AppTheme>(
     searchParams.size
       ? `${endpoints.theme}?${searchParams.toString()}`
-      : endpoints.theme
+      : endpoints.theme,
   );
+
   return res;
 }

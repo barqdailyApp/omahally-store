@@ -96,6 +96,7 @@
     "orders": "My Orders",
     "favorite": "Favorite Products",
     "addresses": "My Addresses",
+    "change_store": "Change Store",
     "logout": "Logout"
   },
   "Pages": {
@@ -341,6 +342,7 @@
     "GuestGate": {
       "title": "Choose how to continue",
       "map_title": "Choose your delivery location",
+      "warehouse_title": "Choose a Store to deliver from",
       "message": "Select your location on the map and press Save, or login to continue with your account.",
       "no_warehouse_near_message": "No warehouse near your location, please select another location, or login to continue with your account.",
       "map_hint": "Drag the map pin to your exact location before saving.",

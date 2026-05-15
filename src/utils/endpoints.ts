@@ -64,4 +64,7 @@ export const endpoints = {
     cancel: (shipment_id: string) => `shipment/cancel-shipment/${shipment_id}`,
     return: (order_id: string) => `order/return-order/${order_id}`,
   },
+  warehouses: {
+    list: "warehouse/active",
+  },
 };

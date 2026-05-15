@@ -17,7 +17,7 @@ interface RegisterBody {
 export async function register(body: RegisterBody) {
   const res = await postData<{ expiryTime: string }, RegisterBody>(
     endpoints.auth.register,
-    body
+    body,
   );
 
   if ("error" in res) {
@@ -92,12 +92,22 @@ export type verifyOtpResponse = User & {
 };
 
 export async function saveFavAddress(
-  address: Pick<Address, "latitude" | "longitude">
+  address: Pick<Address, "latitude" | "longitude">,
+  warehouseId?: string,
+  deleteWarehouseId = false,
 ) {
   cookies().set(
     COOKIES_KEYS.favAddress,
-    JSON.stringify({ latitude: address.latitude, longitude: address.longitude })
+    JSON.stringify({
+      latitude: address.latitude,
+      longitude: address.longitude,
+    }),
   );
+  if (warehouseId) {
+    cookies().set(COOKIES_KEYS.warehouseId, warehouseId);
+  } else if (deleteWarehouseId) {
+    cookies().delete(COOKIES_KEYS.warehouseId);
+  }
 }
 export async function getFavAddress(): Promise<Pick<
   Address,

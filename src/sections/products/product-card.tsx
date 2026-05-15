@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { getCookie } from "cookies-next";
 import { useTranslations } from "next-intl";
 import { useState, useCallback } from "react";
 
@@ -22,6 +23,7 @@ import { RouterLink } from "@/routes/components";
 import { useCurrency } from "@/utils/format-number";
 
 import { useAuthContext } from "@/auth/hooks";
+import { COOKIES_KEYS } from "@/config-global";
 import { useCartStore } from "@/contexts/cart-store";
 import { useNoGuestStore } from "@/contexts/no-guest";
 import { addProductToCart } from "@/actions/cart-actions";
@@ -101,10 +103,13 @@ export function ProductCard({
       if (!product.is_quantity_available || adding) return;
       setAdding(true);
       try {
+        const warehouseId = getCookie(COOKIES_KEYS.warehouseId);
+
         const res = await addProductToCart({
           product_category_price_id: product.product_category_price_id,
           options: [],
           quantity: product.min_order_quantity,
+          ...(warehouseId ? { warehouse_id: warehouseId } : {}),
         });
         if ("error" in res) {
           enqueueSnackbar(res.error ?? t("add_to_cart_failed"), {

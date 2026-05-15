@@ -12,12 +12,13 @@ import Copyrights from "../common/copyrights";
 type Props = {
   children: React.ReactNode;
   logo?: string;
+  isAddressRequired?: boolean;
 };
 
-export default async function StoreLayout({ children, logo }: Props) {
+export default async function StoreLayout({ children, logo, isAddressRequired }: Props) {
   return (
     <>
-      <StoreHeader logo={logo} />
+      <StoreHeader logo={logo} isAddressRequired={isAddressRequired} />
       <Box
         sx={{
           display: "grid",
