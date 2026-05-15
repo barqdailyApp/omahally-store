@@ -24,9 +24,10 @@ import LanguagePopover from "../common/language-popover";
 
 interface Props {
   logo?: string;
+  isAddressRequired?: boolean;
 }
 
-export default function StoreHeader({ logo }: Props) {
+export default function StoreHeader({ logo, isAddressRequired }: Props) {
   const theme = useTheme();
 
   const offsetTop = useOffSetTop(HEADER.H_OFFSET);
@@ -77,7 +78,7 @@ export default function StoreHeader({ logo }: Props) {
         flexShrink={0}
       >
         <LanguagePopover isMobile />
-        <AccountPopover isMobile={isSm} />
+        <AccountPopover isMobile={isSm} isAddressRequired={isAddressRequired} />
         <CartButton isMobile={isSm} />
       </Stack>
     </>

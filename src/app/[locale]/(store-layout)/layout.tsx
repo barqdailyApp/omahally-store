@@ -17,19 +17,22 @@ export default async function Layout({
   let logo: string | undefined;
   const theme = await getAppTheme();
   let guestCurrencyCode: string | null = null;
+  let isAddressRequired = true;
   if (!("error" in theme)) {
     logo = theme.data?.theme.logo;
     guestCurrencyCode = theme.data?.currency?.code || null;
+    isAddressRequired = theme.data?.theme.is_address_required ?? true;
   }
 
   const favAddress = await getFavAddress();
 
   return (
-    <StoreLayout logo={logo}>
+    <StoreLayout logo={logo} isAddressRequired={isAddressRequired}>
       <GuestCurrencySync currencyCode={guestCurrencyCode} />
       <GuestGate
         forceOpen={!favAddress || !guestCurrencyCode}
         noWarehouseNear={!!favAddress && !guestCurrencyCode}
+        chooseWarehouse={!isAddressRequired}
       >
         {children}
         {initcart}
