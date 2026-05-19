@@ -107,8 +107,10 @@ export async function updateCartProductOptions(
   return res?.data;
 }
 
-export async function fetchTimeSlots(delivery_day: string) {
-  const res = await getData<TimeSlot[]>(endpoints.cart.timeSlots(delivery_day));
+export async function fetchTimeSlots(delivery_day: string, delivery: boolean) {
+  const res = await getData<TimeSlot[]>(
+    `${endpoints.cart.timeSlots(delivery_day)}?delivery=${delivery ? "true" : "false"}`,
+  );
 
   if ("error" in res) {
     return res;
