@@ -19,6 +19,7 @@ import CartButton from "./cart-button";
 import { HEADER } from "../config-layout";
 import AccountPopover from "../common/account-popover";
 import LanguagePopover from "../common/language-popover";
+import WarehouseSelect from "../common/warehouse-select";
 
 // ----------------------------------------------------------------------
 
@@ -78,7 +79,8 @@ export default function StoreHeader({ logo, isAddressRequired }: Props) {
         flexShrink={0}
       >
         <LanguagePopover isMobile />
-        <AccountPopover isMobile={isSm} isAddressRequired={isAddressRequired} />
+        {!isAddressRequired && <WarehouseSelect />}
+        <AccountPopover isMobile={isSm} />
         <CartButton isMobile={isSm} />
       </Stack>
     </>

@@ -1,7 +1,6 @@
 "use client";
 
 import { m } from "framer-motion";
-import { getCookie } from "cookies-next";
 import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
 
@@ -14,19 +13,7 @@ import { alpha } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import LoadingButton from "@mui/lab/LoadingButton";
-import {
-  Radio,
-  Button,
-  Dialog,
-  RadioGroup,
-  DialogTitle,
-  ListItemIcon,
-  ListItemText,
-  DialogActions,
-  DialogContent,
-  FormControlLabel,
-} from "@mui/material";
+import { Button, ListItemIcon, ListItemText } from "@mui/material";
 
 import { paths } from "@/routes/paths";
 import { useRouter } from "@/routes/hooks";
@@ -35,20 +22,14 @@ import { RouterLink } from "@/routes/components";
 import { useBoolean } from "@/hooks/use-boolean";
 
 import { useAuthContext } from "@/auth/hooks";
-import { COOKIES_KEYS } from "@/config-global";
 import { useCartStore } from "@/contexts/cart-store";
-import { saveFavAddress } from "@/actions/auth-methods";
-import { fetchActiveWarehouses } from "@/actions/warehouse-actions";
 
 import Iconify from "@/components/iconify";
 import { varHover } from "@/components/animate";
 import { useSnackbar } from "@/components/snackbar";
-import { LoadingScreen } from "@/components/loading-screen";
 import CustomPopover, { usePopover } from "@/components/custom-popover";
 
 import AddressDialog from "@/sections/cart/address-select/address-dialog";
-
-import { Warehouse } from "@/types/warehouse";
 
 // ----------------------------------------------------------------------
 
@@ -79,13 +60,9 @@ const BASE_OPTIONS: Option[] = [
 
 interface AccountPopoverProps {
   isMobile?: boolean;
-  isAddressRequired?: boolean;
 }
 
-export default function AccountPopover({
-  isMobile,
-  isAddressRequired,
-}: AccountPopoverProps) {
+export default function AccountPopover({ isMobile }: AccountPopoverProps) {
   const t = useTranslations();
   const { authenticated } = useAuthContext();
 
@@ -99,13 +76,7 @@ export default function AccountPopover({
     );
   }, []);
 
-  if (authenticated)
-    return (
-      <AccountPopoverContent
-        isMobile={isMobile}
-        isAddressRequired={isAddressRequired}
-      />
-    );
+  if (authenticated) return <AccountPopoverContent isMobile={isMobile} />;
 
   const loginHref = `${paths.auth.jwt.login}?${searchParams}`;
   const loginLabel = t("Global.Label.login");
@@ -155,35 +126,22 @@ export default function AccountPopover({
   );
 }
 
-function AccountPopoverContent({
-  isMobile,
-  isAddressRequired,
-}: {
-  isMobile?: boolean;
-  isAddressRequired?: boolean;
-}) {
+function AccountPopoverContent({ isMobile }: { isMobile?: boolean }) {
   const t = useTranslations("Navigation");
   const router = useRouter();
   const popover = usePopover();
   const addressesDialog = useBoolean();
-  const changeStoreDialog = useBoolean();
   const { enqueueSnackbar } = useSnackbar();
   const { user, logout } = useAuthContext();
   const { initCart } = useCartStore();
 
   const OPTIONS: Option[] = [
     ...BASE_OPTIONS,
-    isAddressRequired === false
-      ? {
-          label: "change_store",
-          onClick: changeStoreDialog.onTrue,
-          icon: "mdi:store-edit-outline",
-        }
-      : {
-          label: "addresses",
-          onClick: addressesDialog.onTrue,
-          icon: "mdi:house-edit-outline",
-        },
+    {
+      label: "addresses",
+      onClick: addressesDialog.onTrue,
+      icon: "mdi:house-edit-outline",
+    },
   ];
 
   const handleLogout = async () => {
@@ -307,89 +265,6 @@ function AccountPopoverContent({
           onClose={addressesDialog.onFalse}
         />
       )}
-
-      {changeStoreDialog.value && (
-        <ChangeStoreDialog
-          open={changeStoreDialog.value}
-          onClose={changeStoreDialog.onFalse}
-        />
-      )}
     </>
-  );
-}
-
-function ChangeStoreDialog({
-  open,
-  onClose,
-}: {
-  open: boolean;
-  onClose: VoidFunction;
-}) {
-  const t = useTranslations("Pages.GuestGate");
-  const router = useRouter();
-  const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedWarehouseId, setSelectedWarehouseId] = useState<string | null>(
-    () => (getCookie(COOKIES_KEYS.warehouseId) as string | undefined) ?? null,
-  );
-  const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchActiveWarehouses().then((res) => {
-      setWarehouses("error" in res ? [] : res.data);
-      setLoading(false);
-    });
-  }, []);
-
-  const handleConfirm = async () => {
-    const warehouse = warehouses.find((w) => w.id === selectedWarehouseId);
-    if (!warehouse) return;
-    setSaving(true);
-    await saveFavAddress(
-      {
-        latitude: warehouse.latitude.toString(),
-        longitude: warehouse.longitude.toString(),
-      },
-      warehouse.id,
-    );
-    setSaving(false);
-    onClose();
-    router.refresh();
-  };
-
-  return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>{t("warehouse_title")}</DialogTitle>
-      <DialogContent>
-        {!loading ? (
-          <RadioGroup
-            value={selectedWarehouseId}
-            onChange={(e) => setSelectedWarehouseId(e.target.value)}
-          >
-            {warehouses.map((w) => (
-              <FormControlLabel
-                key={w.id}
-                value={w.id}
-                control={<Radio />}
-                label={w.name}
-              />
-            ))}
-          </RadioGroup>
-        ) : (
-          <LoadingScreen sx={{ py: 5 }} />
-        )}
-      </DialogContent>
-      <DialogActions>
-        <LoadingButton
-          variant="contained"
-          loading={saving}
-          disabled={!selectedWarehouseId}
-          onClick={handleConfirm}
-        >
-          {t("confirm_location")}
-        </LoadingButton>
-      </DialogActions>
-    </Dialog>
   );
 }
