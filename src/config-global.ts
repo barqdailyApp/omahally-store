@@ -23,6 +23,7 @@ export const COOKIES_KEYS = {
   expiryTime: "expiryTime",
   favAddress: "sammartstore-fav-address",
   warehouseId: "sammartstore-warehouse-id",
+  tenantId: "sammartstore-tenant-id",
 };
 
 export const PRODUCTS_PER_PAGE = 35;

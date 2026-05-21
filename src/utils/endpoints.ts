@@ -67,4 +67,7 @@ export const endpoints = {
   warehouses: {
     list: "warehouse/active",
   },
+  tenant: {
+    byDomain: (domain: string) => `tenant/theme-by-domain/${domain}`,
+  },
 };
