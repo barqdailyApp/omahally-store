@@ -57,7 +57,7 @@ interface CheckoutStateActions {
 
   setAddresses: (
     addresses: FullAddress[] | ((prev: FullAddress[]) => FullAddress[]),
-    isAddressRequired: boolean,
+    isAddressRequired?: boolean,
   ) => void;
   setChoosenAddress: (address: FullAddress | null) => void;
 
@@ -145,7 +145,7 @@ export const usecheckoutStore = create<InitialState & CheckoutStateActions>()(
         saveFavAddress(favAddress);
       }
 
-      if (isAddressRequired) {
+      if (isAddressRequired ?? state.isAddressRequired) {
         set({
           addresses: newAddresses,
           choosenAddress,
