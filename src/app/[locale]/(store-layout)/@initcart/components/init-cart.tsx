@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import { useSnackbar } from "notistack";
 
 import { useAuthContext } from "@/auth/hooks";
+import { getAppTheme } from "@/actions/theme";
 import { useCartStore } from "@/contexts/cart-store";
-import { fetchSections } from "@/actions/products-actions";
 import { fetchAddresses } from "@/actions/profile-actions";
 import { getCurrencies } from "@/actions/currency-actions";
 import { usecheckoutStore } from "@/contexts/checkout-store";
@@ -14,7 +14,7 @@ import { fetchPayments, fetchFullCart } from "@/actions/cart-actions";
 export default function InitCart() {
   const { authenticated } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
-  const { initProducts } = useCartStore();
+  const { initProducts, setDeliveryFee, setMinOrderPrice } = useCartStore();
   const {
     setAddresses,
     setDeliveryTypes,
@@ -23,11 +23,18 @@ export default function InitCart() {
     setIsDigital,
     setTaxRate,
     setWarehouseId,
+    setIsAddressRequired,
   } = usecheckoutStore();
 
   useEffect(() => {
     if (!authenticated) return;
     (async () => {
+      let isAddressRequried = true;
+      const appTheme = await getAppTheme();
+      if (!("error" in appTheme)) {
+        isAddressRequried = appTheme.data.theme.is_address_required;
+      }
+
       const cartRes = await fetchFullCart();
       if ("error" in cartRes) {
         if (cartRes.status !== 401)
@@ -37,15 +44,11 @@ export default function InitCart() {
         setIsDigital(cartRes.is_digital);
         setTaxRate(cartRes.warehouse.tax_rate);
         setWarehouseId(cartRes.warehouse.id ?? null);
-      }
-
-      const sectionRes = await fetchSections();
-
-      if ("error" in sectionRes) {
-        if (sectionRes.status !== 401)
-          enqueueSnackbar(sectionRes.error, { variant: "error" });
-      } else {
-        setDeliveryTypes([]);
+        setMinOrderPrice(Number(cartRes.warehouse.min_order_price));
+        setDeliveryFee(cartRes.delivery_fee);
+        if (!isAddressRequried) {
+          setDeliveryTypes(cartRes.warehouse.delivery_type);
+        }
       }
 
       const addressesRes = await fetchAddresses();
@@ -54,7 +57,8 @@ export default function InitCart() {
         if (addressesRes.status !== 401)
           enqueueSnackbar(addressesRes.error, { variant: "error" });
       } else {
-        setAddresses(addressesRes);
+        setIsAddressRequired(isAddressRequried);
+        setAddresses(addressesRes, isAddressRequried);
       }
 
       const currenciesRes = await getCurrencies();
@@ -81,8 +85,11 @@ export default function InitCart() {
     initProducts,
     setAddresses,
     setCurrencies,
+    setDeliveryFee,
     setDeliveryTypes,
+    setIsAddressRequired,
     setIsDigital,
+    setMinOrderPrice,
     setPayments,
     setTaxRate,
     setWarehouseId,
