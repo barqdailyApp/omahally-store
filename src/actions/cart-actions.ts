@@ -10,6 +10,7 @@ import {
 
 import { FullCart, PromoCode, CartProduct } from "@/contexts/cart-store";
 
+import { DeliveryType } from "@/types/profile";
 import { Payment, TimeSlot } from "@/types/cart";
 
 export async function fetchCartProducts() {
@@ -107,9 +108,23 @@ export async function updateCartProductOptions(
   return res?.data;
 }
 
-export async function fetchTimeSlots(delivery_day: string, delivery: boolean) {
+export async function fetchTimeSlots({
+  delivery_day,
+  deliveryType,
+  warehouseId,
+}: {
+  delivery_day: string;
+  deliveryType: DeliveryType;
+  warehouseId?: string | null;
+}) {
+  const delivery = deliveryType === "SCHEDULED" ? "true" : "false";
+
   const res = await getData<TimeSlot[]>(
-    `${endpoints.cart.timeSlots(delivery_day)}?delivery=${delivery ? "true" : "false"}`,
+    `${endpoints.cart.timeSlots(delivery_day)}?delivery=${delivery}${
+      deliveryType === "WAREHOUSE_PICKUP" && warehouseId
+        ? `&warehouse_id=${warehouseId}`
+        : ""
+    }`,
   );
 
   if ("error" in res) {
