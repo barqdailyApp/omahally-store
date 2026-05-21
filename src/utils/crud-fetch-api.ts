@@ -18,7 +18,6 @@ function isFormData(value: unknown) {
   return value instanceof FormData;
 }
 const commonErrorMessages = new Map([
-  ["404", "Global.Error.Server.NOT_FOUND"],
   ["500", "Global.Error.Server.INTERNAL_SERVER_ERROR"],
   ["503", "Global.Error.Server.SERVICE_IS_NOT_AVAILABLE"],
 ]);
@@ -43,7 +42,7 @@ async function apiRequest<TResponse, TBody = undefined>(
   )?.value;
 
   if (!tenantId) {
-    return errorObject("Global.Error.Server.NOT_FOUND", 404);
+    return errorObject("Store not found", 404);
   }
 
   const headers = {
