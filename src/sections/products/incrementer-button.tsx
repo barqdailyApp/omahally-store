@@ -42,7 +42,9 @@ const IncrementerButton = forwardRef<HTMLDivElement, Props>(
     const product = products.find((item) => item.id === cartProductId);
     const quantity = product?.quantity || 0;
     const maxQuantity = Math.min(
-      product?.warehouse_quantity || 0,
+      ["DIGITAL", "SERVICE"].includes(product?.product_class || "")
+        ? Infinity
+        : product?.warehouse_quantity || 0,
       product?.max_order_quantity || 0,
     );
 

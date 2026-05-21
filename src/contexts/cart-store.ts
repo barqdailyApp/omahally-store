@@ -17,6 +17,7 @@ export interface FullCart {
 export interface CartProduct {
   id: string;
   product_id: string;
+  product_class: "PHYSICAL" | "DIGITAL" | "SERVICE";
   name: string;
   section_id: string;
   description: string;
