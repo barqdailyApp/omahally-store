@@ -1,9 +1,17 @@
 import { create } from "zustand";
 
+import { DeliveryType } from "@/types/profile";
+
 export interface FullCart {
   is_digital: boolean;
+  delivery_fee: number;
   products: CartProduct[];
-  warehouse: { id: string; tax_rate: string };
+  warehouse: {
+    id: string;
+    tax_rate: string;
+    delivery_type: DeliveryType[];
+    min_order_price: string;
+  };
 }
 
 export interface CartProduct {

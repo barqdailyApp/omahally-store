@@ -6,8 +6,6 @@ import { Currency } from "@/types/currency";
 import { FullAddress } from "@/types/profile";
 import { Payment, TimeSlot } from "@/types/cart";
 
-import { useCartStore } from "./cart-store";
-
 type DeliveryType = "FAST" | "WAREHOUSE_PICKUP" | "SCHEDULED";
 
 interface PaymentForm {
@@ -44,6 +42,7 @@ interface InitialState {
 
   warehouseId: string | null;
   taxRate: string | null;
+  isAddressRequired: boolean;
 
   isDigital: boolean;
 }
@@ -58,6 +57,7 @@ interface CheckoutStateActions {
 
   setAddresses: (
     addresses: FullAddress[] | ((prev: FullAddress[]) => FullAddress[]),
+    isAddressRequired: boolean,
   ) => void;
   setChoosenAddress: (address: FullAddress | null) => void;
 
@@ -80,6 +80,7 @@ interface CheckoutStateActions {
 
   setWarehouseId: (warehouseId: string | null) => void;
   setTaxRate: (taxRate: string | null) => void;
+  setIsAddressRequired: (isAddressRequired: boolean) => void;
 
   setIsDigital: (is_digital: boolean) => void;
 }
@@ -112,6 +113,7 @@ const initialState: InitialState = {
 
   warehouseId: null,
   taxRate: null,
+  isAddressRequired: true,
 
   isDigital: false,
 };
@@ -131,7 +133,7 @@ export const usecheckoutStore = create<InitialState & CheckoutStateActions>()(
       })),
     setChoosenDeliveryType: (deliveryType) =>
       set(() => ({ choosenDeliveryType: deliveryType })),
-    setAddresses: (addresses) => {
+    setAddresses: (addresses, isAddressRequired) => {
       const state = get();
       const newAddresses =
         typeof addresses === "function"
@@ -141,31 +143,36 @@ export const usecheckoutStore = create<InitialState & CheckoutStateActions>()(
       const choosenAddress = state.choosenAddress || newAddresses[0];
       if (favAddress) {
         saveFavAddress(favAddress);
-        useCartStore.setState({
-          minOrderPrice: choosenAddress.min_order_price,
-          deliveryFee: choosenAddress.delivery_price,
-        });
       }
 
-      set({
-        addresses: newAddresses,
-        choosenAddress,
-        deliveryTypes: choosenAddress.delivery_type,
-      });
+      if (isAddressRequired) {
+        set({
+          addresses: newAddresses,
+          choosenAddress,
+          deliveryTypes: choosenAddress.delivery_type,
+        });
+      } else {
+        set({
+          addresses: newAddresses,
+          choosenAddress,
+        });
+      }
     },
     setChoosenAddress: (address) => {
       if (address) {
         saveFavAddress(address);
-        useCartStore.setState({
-          minOrderPrice: address.min_order_price,
-          deliveryFee: address.delivery_price,
-        });
       }
 
-      set({
-        choosenAddress: address,
-        deliveryTypes: address ? address.delivery_type : [],
-      });
+      if (get().isAddressRequired) {
+        set({
+          choosenAddress: address,
+          deliveryTypes: address ? address.delivery_type : [],
+        });
+      } else {
+        set({
+          choosenAddress: address,
+        });
+      }
     },
 
     setCurrencies: (currencies) => set(() => ({ currencies })),
@@ -191,5 +198,7 @@ export const usecheckoutStore = create<InitialState & CheckoutStateActions>()(
     setWarehouseId: (warehouseId) => set(() => ({ warehouseId })),
     setTaxRate: (taxRate) => set(() => ({ taxRate })),
     setIsDigital: (isDigital) => set(() => ({ isDigital })),
+    setIsAddressRequired: (isAddressRequired) =>
+      set(() => ({ isAddressRequired })),
   }),
 );
