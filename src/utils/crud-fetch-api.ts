@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 
 import { defaultLocale } from "@/i18n/config-locale";
-import { HOST_API, TENANT_ID, COOKIES_KEYS } from "@/config-global";
+import { HOST_API, COOKIES_KEYS } from "@/config-global";
 
 import {
   ApiResponse,
@@ -38,6 +38,13 @@ async function apiRequest<TResponse, TBody = undefined>(
   const lang =
     cookie.find((item) => item.name === COOKIES_KEYS.lang)?.value ||
     defaultLocale;
+  const tenantId = cookie.find(
+    (item) => item.name === COOKIES_KEYS.tenantId,
+  )?.value;
+
+  if (!tenantId) {
+    return errorObject("Global.Error.Server.NOT_FOUND", 404);
+  }
 
   const headers = {
     ...(!isFormData(body) && {
@@ -47,7 +54,7 @@ async function apiRequest<TResponse, TBody = undefined>(
       Authorization: `Bearer ${token}`,
     }),
     "Accept-Language": lang,
-    "x-tenant-id": TENANT_ID || "",
+    "x-tenant-id": tenantId,
     ...options.headers,
   };
 
@@ -156,19 +163,21 @@ export async function deleteData<TResponse>(
   return apiRequest<TResponse>(endpoint, "DELETE", undefined, options);
 }
 
-const errorObject = (
+function errorObject(
   error: string = "",
   status: string | number = "",
   code: unknown = null,
   details: unknown = null,
   data: unknown = {},
   validationErrors: unknown = null,
-): ApiErrorResponse => ({
-  success: false,
-  error,
-  status,
-  code,
-  details,
-  data,
-  validationErrors,
-});
+): ApiErrorResponse {
+  return {
+    success: false,
+    error,
+    status,
+    code,
+    details,
+    data,
+    validationErrors,
+  };
+}
