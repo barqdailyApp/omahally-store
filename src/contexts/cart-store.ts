@@ -3,7 +3,7 @@ import { create } from "zustand";
 export interface FullCart {
   is_digital: boolean;
   products: CartProduct[];
-  warehouse: { tax_rate: string };
+  warehouse: { id: string; tax_rate: string };
 }
 
 export interface CartProduct {

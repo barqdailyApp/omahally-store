@@ -22,13 +22,13 @@ export default function InitCart() {
     setCurrencies,
     setIsDigital,
     setTaxRate,
+    setWarehouseId,
   } = usecheckoutStore();
 
   useEffect(() => {
     if (!authenticated) return;
     (async () => {
       const cartRes = await fetchFullCart();
-
       if ("error" in cartRes) {
         if (cartRes.status !== 401)
           enqueueSnackbar(cartRes.error, { variant: "error" });
@@ -36,6 +36,7 @@ export default function InitCart() {
         initProducts(cartRes.products);
         setIsDigital(cartRes.is_digital);
         setTaxRate(cartRes.warehouse.tax_rate);
+        setWarehouseId(cartRes.warehouse.id ?? null);
       }
 
       const sectionRes = await fetchSections();
@@ -84,6 +85,7 @@ export default function InitCart() {
     setIsDigital,
     setPayments,
     setTaxRate,
+    setWarehouseId,
   ]);
 
   return null;

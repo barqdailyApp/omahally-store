@@ -41,6 +41,7 @@ export default function TimeSelect() {
     setTimeSlot,
     day,
     setDay,
+    warehouseId,
   } = usecheckoutStore();
   const dateDialog = useBoolean();
   const formateDate = useFormatDate();
@@ -48,10 +49,13 @@ export default function TimeSelect() {
 
   useEffect(() => {
     const getTimeSlots = async () => {
-      const res = await fetchTimeSlots(
-        fDate(day, "MM-dd-yyyy"),
-        choosenDeliveryType === "SCHEDULED",
-      );
+      if (!choosenDeliveryType) return;
+
+      const res = await fetchTimeSlots({
+        delivery_day: fDate(day, "MM-dd-yyyy"),
+        deliveryType: choosenDeliveryType,
+        warehouseId,
+      });
       if ("error" in res) {
         enqueueSnackbar(res.error, { variant: "error" });
       } else {
@@ -61,7 +65,7 @@ export default function TimeSelect() {
     };
 
     getTimeSlots();
-  }, [choosenDeliveryType, day, enqueueSnackbar, setTimeSlot]);
+  }, [choosenDeliveryType, day, enqueueSnackbar, setTimeSlot, warehouseId]);
 
   const renderDeliveryTypes = deliveryTypes.map((item, index) => (
     <Fragment key={item}>
