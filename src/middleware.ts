@@ -15,21 +15,26 @@ export default async function middleware(request: NextRequest) {
   const hasTenantCookie = request.cookies.has(COOKIES_KEYS.tenantId);
 
   if (!hasTenantCookie) {
-    const isHttps = request.nextUrl.protocol === "https:";
+    const domain = (
+      request.headers.get("x-forwarded-host") ||
+      request.headers.get("host") ||
+      request.nextUrl.hostname
+    ).split(":")[0]; // strip port if present
+    const isLocalhost = domain === "localhost" || domain === "127.0.0.1";
     let tenantId: string | undefined;
 
-    if (!isHttps) {
+    if (isLocalhost) {
       tenantId = process.env.NEXT_PUBLIC_TENANT_ID;
     } else {
-      const domain = request.nextUrl.hostname;
       const apiBase = process.env.NEXT_PUBLIC_HOST_API;
       try {
         const res = await fetch(`${apiBase}tenant/theme-by-domain/${domain}`);
+
         if (res.ok) {
           const json = await res.json();
           tenantId = json?.data?.tenant_id;
         }
-      } catch {
+      } catch (error) {
         // proceed without setting the cookie if the request fails
       }
     }
