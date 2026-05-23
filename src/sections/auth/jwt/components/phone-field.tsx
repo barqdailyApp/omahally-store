@@ -67,9 +67,4 @@ export const phoneSchema = (yup: typeof Yup, t: (key: string) => string) =>
       (value): boolean | void => !!/^\d+$/.test(value),
     )
     .min(9, t("Global.Error.phone_digits"))
-    .max(9, t("Global.Error.phone_digits"))
-    .test(
-      "start with 7",
-      t("Global.Error.phone_start_with_7"),
-      (value): boolean | void => !!value.startsWith("7"),
-    );
+    .max(9, t("Global.Error.phone_digits"));
