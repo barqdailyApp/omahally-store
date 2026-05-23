@@ -123,8 +123,11 @@
     "Auth": {
       "login_title": "تسجيل الدخول",
       "register_title": "إنشاء حساب",
-      "otp_title": "تأكيد رقمك",
-      "otp_subtitle": "يرجى إدخال الرمز الذي أرسلناه إلى الواتساب الخاص بك",
+      "otp_title": "التحقق من رقم الهاتف",
+      "otp_subtitle": "تم إرسال رمز التحقق (OTP) المكون من 4 أرقام إلى رقمك المنتهي بـ {phoneEnding}. يرجى إدخال الرمز للمتابعة.",
+      "otp_resend_countdown": "لم يصلك الرمز؟ إعادة الإرسال خلال {time}",
+      "otp_resend_prefix": "لم يصلك الرمز؟",
+      "otp_resend_link": "إعادة الإرسال",
       "policies": "الموافقة على <terms>الشروط والأحكام</terms>.",
       "redirect_to_register": "ليس لدي حساب. <link>سجل الآن</link>",
       "redirect_to_login": "لديك حساب بالفعل؟ <link>تسجيل الدخول</link>",

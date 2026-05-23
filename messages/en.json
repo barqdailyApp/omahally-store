@@ -123,8 +123,11 @@
     "Auth": {
       "login_title": "Login",
       "register_title": "Create an Account",
-      "otp_title": "Confirm your number",
-      "otp_subtitle": "Please enter the code we sent to your WhatsApp number",
+      "otp_title": "Phone Verification",
+      "otp_subtitle": "A 4-digit verification code (OTP) has been sent to your number ending in {phoneEnding}. Please enter the code to continue.",
+      "otp_resend_countdown": "Didn't receive the code? Resend in {time}",
+      "otp_resend_prefix": "Didn't receive the code?",
+      "otp_resend_link": "Resend",
       "policies": "Agree with our <terms>terms and conditions</terms>.",
       "redirect_to_register": "I don't have an account. <link>Register</link>",
       "redirect_to_login": "Already have an account? <link>Sign in</link>",

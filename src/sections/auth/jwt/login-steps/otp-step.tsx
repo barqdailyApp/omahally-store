@@ -2,12 +2,12 @@
 
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
-import { useRef, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRef, useState, useEffect, useCallback, ChangeEvent } from "react";
 
-import { Box } from "@mui/material";
 import Stack from "@mui/material/Stack";
+import { Box, Link } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -16,7 +16,7 @@ import { useRouter, useSearchParams } from "@/routes/hooks";
 
 import { useAuthContext } from "@/auth/hooks";
 import { PATH_AFTER_LOGIN } from "@/config-global";
-import { verifyOtp } from "@/actions/auth-methods";
+import { sendOtp, verifyOtp } from "@/actions/auth-methods";
 
 import { useSnackbar } from "@/components/snackbar";
 import FormProvider, { RHFTextField } from "@/components/hook-form";
@@ -41,6 +41,38 @@ export default function LoginOTPStep({
   const returnTo = searchParams.get("returnTo");
 
   const { login } = useAuthContext();
+
+  const [countdown, setCountdown] = useState(60);
+  const [resending, setResending] = useState(false);
+
+  // eslint-disable-next-line consistent-return
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
+
+  const formatCountdown = (seconds: number) => {
+    const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const s = String(seconds % 60).padStart(2, "0");
+    return `${m}:${s}`;
+  };
+
+  const phoneEnding = phoneNumber.trim().slice(-4);
+
+  const handleResend = useCallback(async () => {
+    setResending(true);
+    try {
+      await sendOtp(`+966${phoneNumber.trim()}`);
+      enqueueSnackbar(t("Global.Message.otp_sent"));
+      setCountdown(60);
+    } catch (err: any) {
+      enqueueSnackbar(err, { variant: "error" });
+    } finally {
+      setResending(false);
+    }
+  }, [phoneNumber, enqueueSnackbar, t]);
 
   const anInputSchema = Yup.string().required(" ");
 
@@ -88,7 +120,7 @@ export default function LoginOTPStep({
 
   const handleInputChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index: number
+    index: number,
   ) => {
     const { name, value } = event.target;
 
@@ -105,7 +137,7 @@ export default function LoginOTPStep({
     <Box mb={3}>
       <Typography variant="h4">{t("Pages.Auth.otp_title")}</Typography>
       <Typography color="text.secondary">
-        {t("Pages.Auth.otp_subtitle")}
+        {t("Pages.Auth.otp_subtitle", { phoneEnding })}
       </Typography>
     </Box>
   );
@@ -159,6 +191,28 @@ export default function LoginOTPStep({
           >
             {t("Pages.Auth.otp_submit")}
           </LoadingButton>
+
+          <Typography variant="body2" color="text.secondary" textAlign="center">
+            {countdown > 0 ? (
+              t("Pages.Auth.otp_resend_countdown", {
+                time: formatCountdown(countdown),
+              })
+            ) : (
+              <>
+                {t("Pages.Auth.otp_resend_prefix")}{" "}
+                <Link
+                  component="button"
+                  type="button"
+                  variant="body2"
+                  onClick={handleResend}
+                  sx={{ cursor: resending ? "not-allowed" : "pointer" }}
+                >
+                  {t("Pages.Auth.otp_resend_link")}
+                </Link>
+              </>
+            )}
+          </Typography>
+
           <Button
             fullWidth
             type="button"
