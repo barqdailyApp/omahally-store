@@ -46,7 +46,7 @@ export default function JwtRegisterView() {
 
   const onSubmit = handleSubmit(async (data) => {
     const res = await register({
-      phone: `+967${data.phoneNumber.trim()}`,
+      phone: `+966${data.phoneNumber.trim()}`,
       name: data.name,
     });
     if ("error" in res) {

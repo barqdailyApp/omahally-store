@@ -63,7 +63,7 @@ export default function LoginPhoneStep({
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await sendOtp(`+967${data.phoneNumber.trim()}`);
+      await sendOtp(`+966${data.phoneNumber.trim()}`);
 
       enqueueSnackbar(t("Global.Message.otp_sent"));
 

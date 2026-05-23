@@ -42,9 +42,9 @@ export default function AuthPhoneField({
               dir="ltr"
             >
               <InputAdornment position={dir === "ltr" ? "start" : "end"}>
-                <Iconify icon="twemoji:flag-yemen" />
+                <Iconify icon="flagpack:sa" />
               </InputAdornment>
-              <Typography color="text.secondary">+967</Typography>
+              <Typography color="text.secondary">+966</Typography>
             </Stack>
           ),
           inputProps: {
@@ -64,12 +64,12 @@ export const phoneSchema = (yup: typeof Yup, t: (key: string) => string) =>
     .test(
       "only digits",
       t("Global.Error.phone_only_digits"),
-      (value): boolean | void => !!/^\d+$/.test(value)
+      (value): boolean | void => !!/^\d+$/.test(value),
     )
     .min(9, t("Global.Error.phone_digits"))
     .max(9, t("Global.Error.phone_digits"))
     .test(
       "start with 7",
       t("Global.Error.phone_start_with_7"),
-      (value): boolean | void => !!value.startsWith("7")
+      (value): boolean | void => !!value.startsWith("7"),
     );
