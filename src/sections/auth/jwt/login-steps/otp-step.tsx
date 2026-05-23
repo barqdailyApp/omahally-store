@@ -105,7 +105,7 @@ export default function LoginOTPStep({
   const onSubmit = handleSubmit(async (data) => {
     const otp = Object.values(data).join("");
     const res = await verifyOtp({
-      phoneNumber: `+967${phoneNumber.trim()}`,
+      phoneNumber: `+966${phoneNumber.trim()}`,
       otp,
     });
     if ("error" in res) {
