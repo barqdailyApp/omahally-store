@@ -23,6 +23,7 @@ export const COOKIES_KEYS = {
   expiryTime: "expiryTime",
   favAddress: "sammartstore-fav-address",
   warehouseId: "sammartstore-warehouse-id",
+  warehouseCurrency: "sammartstore-warehouse-currency",
   tenantId: "sammartstore-tenant-id",
 };
 

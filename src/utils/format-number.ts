@@ -1,7 +1,9 @@
 // ----------------------------------------------------------------------
 
 import { useLocale } from "next-intl";
+import { getCookie } from "cookies-next";
 
+import { COOKIES_KEYS } from "@/config-global";
 import { LocaleType } from "@/i18n/config-locale";
 import { usecheckoutStore } from "@/contexts/checkout-store";
 import { useCurrentLocale } from "@/i18n/localization-provider";
@@ -66,14 +68,22 @@ export function fCurrency(inputValue: InputValue) {
 export function useCurrency() {
   const locale = useLocale() as LocaleType;
 
-  const { choosenAddress, choosenCurrency, currencies } = usecheckoutStore();
+  const { choosenAddress, choosenCurrency, currencies, isAddressRequired } =
+    usecheckoutStore();
+  const symbolKey = locale === "en" ? "symbol_en" : "symbol_ar";
+
   const addressCurrency = currencies.find(
     (currency) => currency.code === choosenAddress?.currency,
-  )?.[locale === "en" ? "symbol_en" : "symbol_ar"];
+  )?.[symbolKey];
   const selectedCurrency = currencies.find(
     (currency) => currency.code === choosenCurrency,
-  )?.[locale === "en" ? "symbol_en" : "symbol_ar"];
-
+  )?.[symbolKey];
+  const warehouseCurrencyCode = getCookie(COOKIES_KEYS.warehouseCurrency) as
+    | string
+    | undefined;
+  const warehouseCurrency = currencies.find(
+    (currency) => currency.code === warehouseCurrencyCode,
+  )?.[symbolKey];
   const formater = (inputValue: InputValue, currencyCode = true) => {
     const number = Number(inputValue);
 
@@ -84,9 +94,14 @@ export function useCurrency() {
 
     if (!currencyCode) return fm;
 
-    const currencyLabel = choosenAddress
-      ? addressCurrency || ""
-      : selectedCurrency || "";
+    let currencyLabel: string;
+    if (isAddressRequired) {
+      currencyLabel = choosenAddress
+        ? addressCurrency || ""
+        : selectedCurrency || "";
+    } else {
+      currencyLabel = warehouseCurrency || "";
+    }
 
     if (!currencyLabel) return fm;
 

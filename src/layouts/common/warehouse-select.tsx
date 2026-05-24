@@ -1,8 +1,8 @@
 import { m } from "framer-motion";
-import { getCookie } from "cookies-next";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { getCookie, setCookie } from "cookies-next";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
@@ -101,6 +101,9 @@ function ChangeStoreDialog({
       },
       warehouse.id,
     );
+    if (warehouse.currency) {
+      setCookie(COOKIES_KEYS.warehouseCurrency, warehouse.currency);
+    }
     setSaving(false);
     onClose();
     router.refresh();

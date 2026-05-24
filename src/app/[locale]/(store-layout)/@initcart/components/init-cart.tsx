@@ -27,58 +27,77 @@ export default function InitCart() {
   } = usecheckoutStore();
 
   useEffect(() => {
-    if (!authenticated) return;
-    (async () => {
-      let isAddressRequried = true;
-      const appTheme = await getAppTheme();
-      if (!("error" in appTheme)) {
-        isAddressRequried = appTheme.data.theme.is_address_required;
-      }
-
-      const cartRes = await fetchFullCart();
-      if ("error" in cartRes) {
-        if (cartRes.status !== 401)
-          enqueueSnackbar(cartRes.error, { variant: "error" });
-      } else {
-        initProducts(cartRes.products);
-        setIsDigital(cartRes.is_digital);
-        setTaxRate(cartRes.warehouse.tax_rate);
-        setWarehouseId(cartRes.warehouse.id ?? null);
-        setMinOrderPrice(Number(cartRes.warehouse.min_order_price));
-        setDeliveryFee(cartRes.delivery_fee);
-        if (!isAddressRequried) {
-          setDeliveryTypes(cartRes.warehouse.delivery_type);
+    if (!authenticated) {
+      (async () => {
+        let isAddressRequried = true;
+        const appTheme = await getAppTheme();
+        if (!("error" in appTheme)) {
+          isAddressRequried = appTheme.data.theme.is_address_required;
         }
-      }
-
-      const addressesRes = await fetchAddresses();
-
-      if ("error" in addressesRes) {
-        if (addressesRes.status !== 401)
-          enqueueSnackbar(addressesRes.error, { variant: "error" });
-      } else {
         setIsAddressRequired(isAddressRequried);
-        setAddresses(addressesRes, isAddressRequried);
-      }
 
-      const currenciesRes = await getCurrencies();
+        const currenciesRes = await getCurrencies();
 
-      if ("error" in currenciesRes) {
-        if (currenciesRes.status !== 401)
-          enqueueSnackbar(currenciesRes.error, { variant: "error" });
-      } else {
-        setCurrencies(currenciesRes.data);
-      }
+        if ("error" in currenciesRes) {
+          if (currenciesRes.status !== 401)
+            enqueueSnackbar(currenciesRes.error, { variant: "error" });
+        } else {
+          setCurrencies(currenciesRes.data);
+        }
+      })();
+    } else {
+      (async () => {
+        let isAddressRequried = true;
+        const appTheme = await getAppTheme();
+        if (!("error" in appTheme)) {
+          isAddressRequried = appTheme.data.theme.is_address_required;
+        }
 
-      const paymentsRes = await fetchPayments();
+        const cartRes = await fetchFullCart();
+        if ("error" in cartRes) {
+          if (cartRes.status !== 401)
+            enqueueSnackbar(cartRes.error, { variant: "error" });
+        } else {
+          initProducts(cartRes.products);
+          setIsDigital(cartRes.is_digital);
+          setTaxRate(cartRes.warehouse.tax_rate);
+          setWarehouseId(cartRes.warehouse.id ?? null);
+          setMinOrderPrice(Number(cartRes.warehouse.min_order_price));
+          setDeliveryFee(cartRes.delivery_fee);
+          if (!isAddressRequried) {
+            setDeliveryTypes(cartRes.warehouse.delivery_type);
+          }
+        }
 
-      if ("error" in paymentsRes) {
-        if (paymentsRes.status !== 401)
-          enqueueSnackbar(paymentsRes.error, { variant: "error" });
-      } else {
-        setPayments(paymentsRes);
-      }
-    })();
+        const addressesRes = await fetchAddresses();
+
+        if ("error" in addressesRes) {
+          if (addressesRes.status !== 401)
+            enqueueSnackbar(addressesRes.error, { variant: "error" });
+        } else {
+          setAddresses(addressesRes, isAddressRequried);
+        }
+        setIsAddressRequired(isAddressRequried);
+
+        const currenciesRes = await getCurrencies();
+
+        if ("error" in currenciesRes) {
+          if (currenciesRes.status !== 401)
+            enqueueSnackbar(currenciesRes.error, { variant: "error" });
+        } else {
+          setCurrencies(currenciesRes.data);
+        }
+
+        const paymentsRes = await fetchPayments();
+
+        if ("error" in paymentsRes) {
+          if (paymentsRes.status !== 401)
+            enqueueSnackbar(paymentsRes.error, { variant: "error" });
+        } else {
+          setPayments(paymentsRes);
+        }
+      })();
+    }
   }, [
     authenticated,
     enqueueSnackbar,

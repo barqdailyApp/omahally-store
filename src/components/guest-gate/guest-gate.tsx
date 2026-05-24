@@ -1,7 +1,7 @@
 "use client";
 
-import { getCookie } from "cookies-next";
 import { useTranslations } from "next-intl";
+import { getCookie, setCookie } from "cookies-next";
 import {
   useMemo,
   useState,
@@ -98,6 +98,9 @@ export default function GuestGate({
           },
           warehouse.id,
         );
+        if (warehouse.currency) {
+          setCookie(COOKIES_KEYS.warehouseCurrency, warehouse.currency);
+        }
       } else {
         const pos = position ?? defaultMapPosition;
         await saveFavAddress(
