@@ -47,6 +47,7 @@ export const endpoints = {
   },
   address: {
     root: "addresses",
+    validate: "addresses/validate",
     delete: (id: string) => `addresses/${id}`,
     setFavorite: (id: string) => `addresses/${id}/set-favorite`,
   },

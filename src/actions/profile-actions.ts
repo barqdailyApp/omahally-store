@@ -28,6 +28,26 @@ interface AddAddressDataBody {
   phone: string;
 }
 
+interface ValidateAddressBody extends AddAddressDataBody {
+  warehouse_id?: string;
+}
+
+export async function validateAddress(latitude: string, longitude: string, warehouseId?: string) {
+  const res = await postData<FullAddress, ValidateAddressBody>(
+    endpoints.address.validate,
+    {
+      name: "validate",
+      address: "validate",
+      latitude,
+      longitude,
+      is_favorite: true,
+      phone: "0000000000",
+      ...(warehouseId && { warehouse_id: warehouseId }),
+    },
+  );
+  return res;
+}
+
 export async function addAddress(dataBody: AddAddressDataBody) {
   const res = await postData<FullAddress, AddAddressDataBody>(
     endpoints.address.root,

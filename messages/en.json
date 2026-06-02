@@ -349,6 +349,10 @@
       "message": "Select your location on the map and press Save, or login to continue with your account.",
       "no_warehouse_near_message": "No warehouse near your location, please select another location, or login to continue with your account.",
       "map_hint": "Drag the map pin to your exact location before saving.",
+      "no_warehouses_message": "We're sorry, we can't serve your current location yet — but we're so happy you found us! 🎉",
+      "no_warehouses_auth_message": "You can still sign in with an existing account or create a new one.",
+      "address_not_supported": "The selected area is not currently supported in the store, please choose another area.",
+      "location_required": "Location access is required to show available stores. Please enable it from your browser settings.",
       "login": "Login",
       "confirm_location": "Save"
     },
