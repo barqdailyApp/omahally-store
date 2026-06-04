@@ -10,6 +10,7 @@ export const paths = {
     },
   },
   home: "/",
+  storeNotFound: "/store-not-found",
   products: "/product",
   favProducts: "/favorite",
   brands: "/brand",

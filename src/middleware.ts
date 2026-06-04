@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { COOKIES_KEYS } from "@/config-global";
 
+import { paths } from "./routes/paths";
+
 export default async function middleware(request: NextRequest) {
   request.headers.set("Accept-Language", "ar");
 
@@ -44,6 +46,11 @@ export default async function middleware(request: NextRequest) {
         path: "/",
         sameSite: "lax",
       });
+    } else if (!request.url.includes(paths.storeNotFound)) {
+      const notFoundUrl = new URL(paths.storeNotFound, request.url);
+      return handleI18nRouting(
+        new NextRequest(notFoundUrl, { headers: request.headers }),
+      );
     }
   }
 
