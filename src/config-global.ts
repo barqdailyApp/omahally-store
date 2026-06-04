@@ -30,6 +30,6 @@ export const COOKIES_KEYS = {
 export const PRODUCTS_PER_PAGE = 35;
 
 export const DEFAULT_ADDRESS: Pick<Address, "latitude" | "longitude"> = {
-  latitude: "15.333699",
-  longitude: "44.222515",
+  latitude: "24.708957223243402",
+  longitude: "46.673366364510215",
 };
