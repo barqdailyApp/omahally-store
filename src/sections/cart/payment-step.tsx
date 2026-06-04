@@ -80,7 +80,7 @@ export default function PaymentStep({ balance }: { balance: number }) {
           inputProps={{
             max: Math.min(balance, totalPrice),
           }}
-          helperText={`${t("wallet_balance")}: ${currency(balance)}`}
+          helperText={<>{t("wallet_balance")}: {currency(balance)}</>}
         />
       </CardContent>
     </Card>

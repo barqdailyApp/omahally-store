@@ -62,7 +62,7 @@ export default function ShipmentItem({
 
       <Typography variant="subtitle2" fontWeight="400" flexShrink={0}>
         <Typography variant="body2" fontWeight="bold" component="span">
-          {`${currency(shipment.product_price)} / `}
+          {currency(shipment.product_price)} {" / "}
         </Typography>
         {shipment.measurement_unit}
       </Typography>

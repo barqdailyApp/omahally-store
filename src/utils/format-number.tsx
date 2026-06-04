@@ -1,5 +1,6 @@
 // ----------------------------------------------------------------------
 
+import React from "react";
 import { useLocale } from "next-intl";
 import { getCookie } from "cookies-next";
 
@@ -72,8 +73,9 @@ export function useCurrency() {
     usecheckoutStore();
   const symbolKey = locale === "en" ? "symbol_en" : "symbol_ar";
 
+  const addressCurrencyCode = choosenAddress?.currency;
   const addressCurrency = currencies.find(
-    (currency) => currency.code === choosenAddress?.currency,
+    (currency) => currency.code === addressCurrencyCode,
   )?.[symbolKey];
   const selectedCurrency = currencies.find(
     (currency) => currency.code === choosenCurrency,
@@ -84,7 +86,11 @@ export function useCurrency() {
   const warehouseCurrency = currencies.find(
     (currency) => currency.code === warehouseCurrencyCode,
   )?.[symbolKey];
-  const formater = (inputValue: InputValue, currencyCode = true) => {
+
+  const formater = (
+    inputValue: InputValue,
+    currencyCode = true,
+  ): React.ReactNode => {
     const number = Number(inputValue);
 
     const fm = new Intl.NumberFormat("en-US", {
@@ -95,15 +101,30 @@ export function useCurrency() {
     if (!currencyCode) return fm;
 
     let currencyLabel: string;
+    let activeCurrencyCode: string | null | undefined;
+
     if (isAddressRequired) {
-      currencyLabel = choosenAddress
-        ? addressCurrency || ""
-        : selectedCurrency || "";
+      if (choosenAddress) {
+        currencyLabel = addressCurrency || "";
+        activeCurrencyCode = addressCurrencyCode;
+      } else {
+        currencyLabel = selectedCurrency || "";
+        activeCurrencyCode = choosenCurrency;
+      }
     } else {
       currencyLabel = warehouseCurrency || "";
+      activeCurrencyCode = warehouseCurrencyCode;
     }
 
     if (!currencyLabel) return fm;
+
+    if (activeCurrencyCode === "SAR") {
+      return (
+        <>
+          {fm} <span className="icon-saudi_riyal">&#xea;</span>
+        </>
+      );
+    }
 
     return `${fm} ${currencyLabel}`;
   };

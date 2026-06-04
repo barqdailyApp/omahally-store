@@ -352,7 +352,7 @@ function ProductCheckButton({
 
       <Typography variant="subtitle2" fontWeight="400" flexShrink={0}>
         <Typography variant="body2" fontWeight="bold" component="span">
-          {`${currency(shipment.price)} / `}
+          {currency(shipment.price)} {" / "}
         </Typography>
         {shipment.measurement_unit_name}
       </Typography>
