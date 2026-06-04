@@ -4,10 +4,31 @@ import { useTranslations } from "next-intl";
 
 import { Box, Stack, Container, Typography } from "@mui/material";
 
-import { APP_LINKS, CONTACT_INFO } from "../config-info";
+export type FooterProps = {
+  unifiedContactPhone?: string;
+  mobileContactPhone?: string;
+  whatsappNumber?: string;
+  email?: string;
+  appStoreLink?: string;
+  playStoreLink?: string;
+};
 
-export default function Footer() {
+export default function Footer({
+  unifiedContactPhone,
+  mobileContactPhone,
+  whatsappNumber,
+  email,
+  appStoreLink,
+  playStoreLink,
+}: FooterProps) {
   const t = useTranslations("Global.Footer");
+
+  const contactItems = [
+    unifiedContactPhone,
+    mobileContactPhone,
+    whatsappNumber,
+    email,
+  ].filter(Boolean) as string[];
 
   const renderContact = (
     <Box>
@@ -19,7 +40,7 @@ export default function Footer() {
       >
         {t("contact_title")}
       </Typography>
-      {CONTACT_INFO.map((item, index) => (
+      {contactItems.map((item, index) => (
         <Typography
           dir="ltr"
           sx={{
@@ -46,22 +67,26 @@ export default function Footer() {
       >
         {t("download")}
       </Typography>
-      <Link href={APP_LINKS.ios} target="_blank">
-        <Image
-          src="/assets/images/footer/download-ios.svg"
-          width={186}
-          height={55}
-          alt={t("download_ios")}
-        />
-      </Link>
-      <Link href={APP_LINKS.android} target="_blank">
-        <Image
-          src="/assets/images/footer/download-android.svg"
-          width={186}
-          height={55}
-          alt={t("download_android")}
-        />
-      </Link>
+      {appStoreLink && (
+        <Link href={appStoreLink} target="_blank">
+          <Image
+            src="/assets/images/footer/download-ios.svg"
+            width={186}
+            height={55}
+            alt={t("download_ios")}
+          />
+        </Link>
+      )}
+      {playStoreLink && (
+        <Link href={playStoreLink} target="_blank">
+          <Image
+            src="/assets/images/footer/download-android.svg"
+            width={186}
+            height={55}
+            alt={t("download_android")}
+          />
+        </Link>
+      )}
     </Stack>
   );
 

@@ -3,9 +3,9 @@
 import { Box } from "@mui/material";
 
 import StoreHeader from "./header";
-import Footer from "../common/footer";
 import { HEADER } from "../config-layout";
 import Copyrights from "../common/copyrights";
+import Footer, { FooterProps } from "../common/footer";
 
 // ----------------------------------------------------------------------
 
@@ -13,9 +13,14 @@ type Props = {
   children: React.ReactNode;
   logo?: string;
   isAddressRequired?: boolean;
-};
+} & FooterProps;
 
-export default async function StoreLayout({ children, logo, isAddressRequired }: Props) {
+export default async function StoreLayout({
+  children,
+  logo,
+  isAddressRequired,
+  ...footerProps
+}: Props) {
   return (
     <>
       <StoreHeader logo={logo} isAddressRequired={isAddressRequired} />
@@ -32,7 +37,7 @@ export default async function StoreLayout({ children, logo, isAddressRequired }:
       >
         <Box>{children}</Box>
         <Box sx={{ flexShrink: 0 }}>
-          <Footer />
+          <Footer {...footerProps} />
           <Copyrights />
         </Box>
       </Box>

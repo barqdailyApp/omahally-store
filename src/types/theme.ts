@@ -11,5 +11,11 @@ export interface AppTheme {
     show_offer: boolean;
     order_again: boolean;
     is_address_required: boolean;
+    unified_contact_phone: string;
+    mobile_contact_phone: string;
+    whatsapp_number: string;
+    email: string;
+    app_store_link: string;
+    play_store_link: string;
   };
 }

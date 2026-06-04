@@ -18,16 +18,50 @@ export default async function Layout({
   const theme = await getAppTheme();
   let guestCurrencyCode: string | null = null;
   let isAddressRequired = true;
+  let unifiedContactPhone: string | undefined;
+  let mobileContactPhone: string | undefined;
+  let whatsappNumber: string | undefined;
+  let email: string | undefined;
+  let appStoreLink: string | undefined;
+  let playStoreLink: string | undefined;
   if (!("error" in theme)) {
-    logo = theme.data?.theme.logo;
-    guestCurrencyCode = theme.data?.currency?.code || null;
-    isAddressRequired = theme.data?.theme.is_address_required ?? true;
+    const {
+      theme: {
+        logo: resLogo,
+        is_address_required,
+        unified_contact_phone,
+        mobile_contact_phone,
+        whatsapp_number,
+        email: resEmail,
+        app_store_link,
+        play_store_link,
+      },
+      currency,
+    } = theme.data;
+    logo = resLogo;
+    guestCurrencyCode = currency?.code || null;
+    isAddressRequired = is_address_required ?? true;
+    unifiedContactPhone = unified_contact_phone;
+    mobileContactPhone = mobile_contact_phone;
+    whatsappNumber = whatsapp_number;
+    email = resEmail;
+    appStoreLink = app_store_link;
+    playStoreLink = play_store_link;
   }
 
   const favAddress = await getFavAddress();
 
   return (
-    <StoreLayout logo={logo} isAddressRequired={isAddressRequired}>
+    <StoreLayout
+      logo={logo}
+      isAddressRequired={isAddressRequired}
+      unifiedContactPhone={unifiedContactPhone}
+      mobileContactPhone={mobileContactPhone}
+      whatsappNumber={whatsappNumber}
+      email={email}
+      appStoreLink={appStoreLink}
+      playStoreLink={playStoreLink}
+    >
       <GuestCurrencySync currencyCode={guestCurrencyCode} />
       <GuestGate
         forceOpen={!favAddress || !guestCurrencyCode}
