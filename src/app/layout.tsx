@@ -10,28 +10,28 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "برق ديلي",
-  description: "متجر يمني للمنتجات الغذائية",
-  keywords: "Barq Daily, store, Yemen",
+  title: "Omahally",
+  description: "متجر للمنتجات الغذائية",
+  keywords: "Omahally, store, Yemen",
   manifest: "/manifest.json",
   icons: [
-    { rel: "icon", url: "/favicon/favicon.ico" },
+    { rel: "icon", url: "/logo/logo-230-230.png" },
     {
       rel: "icon",
       type: "image/png",
       sizes: "16x16",
-      url: "/favicon/favicon-16x16.png",
+      url: "/logo/logo-230-230.png",
     },
     {
       rel: "icon",
       type: "image/png",
       sizes: "32x32",
-      url: "/favicon/favicon-32x32.png",
+      url: "/logo/logo-230-230.png",
     },
     {
       rel: "apple-touch-icon",
       sizes: "180x180",
-      url: "/favicon/apple-touch-icon.png",
+      url: "/logo/logo-230-230.png",
     },
   ],
 };
