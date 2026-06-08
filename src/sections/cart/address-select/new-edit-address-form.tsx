@@ -1,8 +1,8 @@
 import * as yup from "yup";
-import { useMemo, useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
 import { useForm } from "react-hook-form";
 import { useTranslations } from "next-intl";
+import { useMemo, useState, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -17,9 +17,14 @@ import {
   FormHelperText,
 } from "@mui/material";
 
-import { usecheckoutStore } from "@/contexts/checkout-store";
-import { addAddress, editAddress, validateAddress } from "@/actions/profile-actions";
 import { useGeolocation } from "@/hooks/use-geolocation";
+
+import { usecheckoutStore } from "@/contexts/checkout-store";
+import {
+  addAddress,
+  editAddress,
+  validateAddress,
+} from "@/actions/profile-actions";
 
 import { GoogleMap } from "@/components/map";
 import FormProvider, {
@@ -41,15 +46,25 @@ interface Props {
   onSuccess?: () => void;
 }
 
-export default function NewEditAddressForm({ address, onClose, onSuccess }: Props) {
+export default function NewEditAddressForm({
+  address,
+  onClose,
+  onSuccess,
+}: Props) {
   const t = useTranslations();
   const { enqueueSnackbar } = useSnackbar();
   const { setAddresses, setChoosenAddress } = usecheckoutStore();
 
-  const [validationStatus, setValidationStatus] = useState<ValidationStatus>("idle");
+  const [validationStatus, setValidationStatus] =
+    useState<ValidationStatus>("idle");
 
-  const { location: geoLocation, permissionStatus, getLocation } = useGeolocation();
-  const geoResolved = permissionStatus === "granted" || permissionStatus === "denied";
+  const {
+    location: geoLocation,
+    permissionStatus,
+    getLocation,
+  } = useGeolocation();
+  const geoResolved =
+    permissionStatus === "granted" || permissionStatus === "denied";
 
   const methods = useForm({
     resolver: yupResolver(
@@ -62,7 +77,7 @@ export default function NewEditAddressForm({ address, onClose, onSuccess }: Prop
         latitude: yup.string().required(t("Global.Error.location_required")),
         longitude: yup.string().required(t("Global.Error.location_required")),
         is_favorite: yup.boolean().required(),
-      })
+      }),
     ),
     defaultValues: useMemo(
       () => ({
@@ -80,7 +95,7 @@ export default function NewEditAddressForm({ address, onClose, onSuccess }: Prop
         address?.longitude,
         address?.name,
         address?.phone,
-      ]
+      ],
     ),
   });
 
@@ -100,7 +115,7 @@ export default function NewEditAddressForm({ address, onClose, onSuccess }: Prop
     if (watch("latitude") || watch("longitude")) return;
     methods.setValue("latitude", geoLocation.lat.toString());
     methods.setValue("longitude", geoLocation.lng.toString());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geoLocation, address]);
 
   const watchedLat = watch("latitude");
@@ -128,7 +143,7 @@ export default function NewEditAddressForm({ address, onClose, onSuccess }: Prop
         enqueueSnackbar(res.error, { variant: "error" });
       } else {
         setAddresses((prev) =>
-          prev.map((item) => (item.id === address.id ? res : item))
+          prev.map((item) => (item.id === address.id ? res : item)),
         );
         if (res.is_favorite) setChoosenAddress(res);
         onClose();
@@ -140,7 +155,11 @@ export default function NewEditAddressForm({ address, onClose, onSuccess }: Prop
       } else {
         setAddresses((prev) => [...prev, res]);
         if (res.is_favorite) setChoosenAddress(res);
-        onSuccess ? onSuccess() : onClose();
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          onClose();
+        }
       }
     }
   });
@@ -148,7 +167,7 @@ export default function NewEditAddressForm({ address, onClose, onSuccess }: Prop
   const mapDefaultPosition =
     watchedLat && watchedLng
       ? { lat: Number(watchedLat), lng: Number(watchedLng) }
-      : geoLocation ?? undefined;
+      : (geoLocation ?? undefined);
 
   return (
     <>
@@ -159,7 +178,11 @@ export default function NewEditAddressForm({ address, onClose, onSuccess }: Prop
         <FormProvider methods={methods}>
           <Box height="20rem">
             {!geoResolved ? (
-              <Skeleton variant="rectangular" height="100%" sx={{ borderRadius: 1 }} />
+              <Skeleton
+                variant="rectangular"
+                height="100%"
+                sx={{ borderRadius: 1 }}
+              />
             ) : (
               <GoogleMap
                 defaultPosition={mapDefaultPosition}
