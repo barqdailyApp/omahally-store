@@ -5,6 +5,6 @@ export interface Banar {
   ended_at: string;
   is_active: boolean;
   is_popup: boolean;
-  ref_type?: "product" | "collection" | "subcategory";
+  ref_type?: "PRODUCT" | "COLLECTION" | "SUBCATEGORY";
   ref_id?: string;
 }

@@ -37,10 +37,10 @@ interface Props {
 
 function getBanarHref(banar: Banar): string | null {
   if (!banar.ref_type || !banar.ref_id) return null;
-  if (banar.ref_type === "product") return `${paths.products}/${banar.ref_id}`;
-  if (banar.ref_type === "collection")
+  if (banar.ref_type === "PRODUCT") return `${paths.products}/${banar.ref_id}`;
+  if (banar.ref_type === "COLLECTION")
     return `${paths.collections}/${banar.ref_id}`;
-  if (banar.ref_type === "subcategory")
+  if (banar.ref_type === "SUBCATEGORY")
     return `/category?categoryId=${banar.ref_id}`;
   return null;
 }
@@ -91,6 +91,11 @@ export default function BanarsSwiper({ banars }: Props) {
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: href ? "pointer" : "default",
+                  transition: "opacity 0.2s ease, transform 0.2s ease",
+                  ...(href && {
+                    "&:hover": { opacity: 0.9, transform: "scale(1.01)" },
+                    "&:active": { opacity: 0.8, transform: "scale(0.99)" },
+                  }),
                 }}
                 onClick={href ? () => router.push(href) : undefined}
               >
