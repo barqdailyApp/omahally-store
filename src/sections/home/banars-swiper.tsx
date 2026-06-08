@@ -2,12 +2,14 @@
 
 import Image from "next/image";
 import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 
 import { Box, Stack, styled, IconButton } from "@mui/material";
 
-import { SECTION_PADDING, HEADER } from "@/layouts/config-layout";
+import { paths } from "@/routes/paths";
+import { HEADER } from "@/layouts/config-layout";
 import { LocaleType, localesSettings } from "@/i18n/config-locale";
 
 import Iconify from "@/components/iconify";
@@ -33,8 +35,19 @@ interface Props {
   banars: Banar[];
 }
 
+function getBanarHref(banar: Banar): string | null {
+  if (!banar.ref_type || !banar.ref_id) return null;
+  if (banar.ref_type === "product") return `${paths.products}/${banar.ref_id}`;
+  if (banar.ref_type === "collection")
+    return `${paths.collections}/${banar.ref_id}`;
+  if (banar.ref_type === "subcategory")
+    return `/category?categoryId=${banar.ref_id}`;
+  return null;
+}
+
 export default function BanarsSwiper({ banars }: Props) {
   const locale = useLocale();
+  const router = useRouter();
   const { dir } = localesSettings[locale as LocaleType];
 
   const renderSwiper = (
@@ -62,33 +75,38 @@ export default function BanarsSwiper({ banars }: Props) {
           width: "100%",
         }}
       >
-        {banars?.map((item, index) => (
-          <SwiperSlide
-            key={index}
-            style={{ overflow: "hidden", height: "100%" }}
-          >
-            <Box
-              sx={{
-                position: "relative",
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+        {banars?.map((item, index) => {
+          const href = getBanarHref(item);
+          return (
+            <SwiperSlide
+              key={index}
+              style={{ overflow: "hidden", height: "100%" }}
             >
-              <Image
-                src={item.banar}
-                alt=" "
-                fill
-                sizes="100vw"
-                style={{
-                  objectFit: "contain",
+              <Box
+                sx={{
+                  position: "relative",
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: href ? "pointer" : "default",
                 }}
-              />
-            </Box>
-          </SwiperSlide>
-        ))}
+                onClick={href ? () => router.push(href) : undefined}
+              >
+                <Image
+                  src={item.banar}
+                  alt=" "
+                  fill
+                  sizes="100vw"
+                  style={{
+                    objectFit: "contain",
+                  }}
+                />
+              </Box>
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </Box>
   );
