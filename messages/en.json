@@ -59,7 +59,8 @@
       "download": "Download the app",
       "download_ios": "Download from the App Store",
       "download_android": "Download from Google Play",
-      "copyright": "© {year} Barq Daily. All rights reserved."
+      "copyright": "© {year} Barq Daily. All rights reserved.",
+      "created_by": "Created by"
     },
     "Date": {
       "sunday": "Sunday",

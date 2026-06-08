@@ -59,7 +59,8 @@
       "download": "قم بتنزيل التطبيق",
       "download_ios": "قم بالتنزيل من App Store",
       "download_android": "قم بالتنزيل من Google Play",
-      "copyright": "© {year} Barq Daily. كل الحقوق محفوظة."
+      "copyright": "© {year} Barq Daily. كل الحقوق محفوظة.",
+      "created_by": "تم التطوير بواسطة"
     },
     "Date": {
       "sunday": "الأحد",
