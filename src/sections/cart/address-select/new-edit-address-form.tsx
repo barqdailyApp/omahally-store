@@ -38,9 +38,10 @@ type ValidationStatus = "idle" | "loading" | "valid" | "invalid";
 interface Props {
   address: Address | null;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
-export default function NewEditAddressForm({ address, onClose }: Props) {
+export default function NewEditAddressForm({ address, onClose, onSuccess }: Props) {
   const t = useTranslations();
   const { enqueueSnackbar } = useSnackbar();
   const { setAddresses, setChoosenAddress } = usecheckoutStore();
@@ -139,7 +140,7 @@ export default function NewEditAddressForm({ address, onClose }: Props) {
       } else {
         setAddresses((prev) => [...prev, res]);
         if (res.is_favorite) setChoosenAddress(res);
-        onClose();
+        onSuccess ? onSuccess() : onClose();
       }
     }
   });

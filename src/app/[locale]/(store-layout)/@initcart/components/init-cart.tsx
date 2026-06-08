@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import { useSnackbar } from "notistack";
+import { useState, useEffect } from "react";
 
 import { useAuthContext } from "@/auth/hooks";
 import { getAppTheme } from "@/actions/theme";
@@ -11,9 +11,12 @@ import { getCurrencies } from "@/actions/currency-actions";
 import { usecheckoutStore } from "@/contexts/checkout-store";
 import { fetchPayments, fetchFullCart } from "@/actions/cart-actions";
 
+import RequiredAddressDialog from "@/sections/cart/address-select/required-address-dialog";
+
 export default function InitCart() {
   const { authenticated } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
+  const [addressDialogOpen, setAddressDialogOpen] = useState(false);
   const { initProducts, setDeliveryFee, setMinOrderPrice } = useCartStore();
   const {
     setAddresses,
@@ -27,7 +30,9 @@ export default function InitCart() {
   } = usecheckoutStore();
 
   useEffect(() => {
+    console.log("Initializing cart...");
     if (!authenticated) {
+      console.log("User not authenticated, initializing guest cart...");
       (async () => {
         let isAddressRequried = true;
         const appTheme = await getAppTheme();
@@ -60,21 +65,26 @@ export default function InitCart() {
         } else {
           initProducts(cartRes.products);
           setIsDigital(cartRes.is_digital);
-          setTaxRate(cartRes.warehouse.tax_rate);
-          setWarehouseId(cartRes.warehouse.id ?? null);
-          setMinOrderPrice(Number(cartRes.warehouse.min_order_price));
+          setTaxRate(cartRes.warehouse?.tax_rate);
+          setWarehouseId(cartRes.warehouse?.id ?? null);
+          setMinOrderPrice(Number(cartRes.warehouse?.min_order_price));
           setDeliveryFee(cartRes.delivery_fee);
           if (!isAddressRequried) {
-            setDeliveryTypes(cartRes.warehouse.delivery_type);
+            setDeliveryTypes(cartRes.warehouse?.delivery_type);
           }
         }
 
         const addressesRes = await fetchAddresses();
+        console.log({ addressesRes, isAddressRequried });
 
         if ("error" in addressesRes) {
           if (addressesRes.status !== 401)
             enqueueSnackbar(addressesRes.error, { variant: "error" });
         } else {
+          if (isAddressRequried && addressesRes.length === 0) {
+            console.log("No addresses found, opening address dialog...");
+            setAddressDialogOpen(true);
+          }
           setAddresses(addressesRes, isAddressRequried);
         }
         setIsAddressRequired(isAddressRequried);
@@ -114,5 +124,5 @@ export default function InitCart() {
     setWarehouseId,
   ]);
 
-  return null;
+  return <RequiredAddressDialog open={addressDialogOpen} />;
 }
