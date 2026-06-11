@@ -24,11 +24,11 @@ export default function Footer({
   const t = useTranslations("Global.Footer");
 
   const contactItems = [
-    unifiedContactPhone,
-    mobileContactPhone,
-    whatsappNumber,
-    email,
-  ].filter(Boolean) as string[];
+    { label: t("united_contact_number"), value: unifiedContactPhone },
+    { label: t("phone_number"), value: mobileContactPhone },
+    { label: t("whatsapp"), value: whatsappNumber },
+    { value: email },
+  ].filter((item) => !!item.value) as { label?: string; value: string }[];
 
   const renderContact = (
     <Box>
@@ -40,18 +40,18 @@ export default function Footer({
       >
         {t("contact_title")}
       </Typography>
-      {contactItems.map((item, index) => (
+      {contactItems.map(({ label, value }, index) => (
         <Typography
-          dir="ltr"
           sx={{
-            "[dir='rtl'] &": {
-              width: { sm: "fit-content" },
-              marginInlineStart: { sm: "auto" },
-            },
+            display: "flex",
+            alignItems: "center",
+            gap: { xs: 1, sm: 0.5 },
+            justifyContent: { xs: "space-between", sm: "flex-start" },
           }}
           key={index}
         >
-          {item}
+          {label && <Typography component="span">{label}:</Typography>}
+          <Typography component="span">{value}</Typography>
         </Typography>
       ))}
     </Box>
