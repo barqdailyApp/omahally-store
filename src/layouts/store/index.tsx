@@ -13,12 +13,14 @@ type Props = {
   children: React.ReactNode;
   logo?: string;
   isAddressRequired?: boolean;
+  appName?: string;
 } & FooterProps;
 
 export default async function StoreLayout({
   children,
   logo,
   isAddressRequired,
+  appName,
   ...footerProps
 }: Props) {
   return (
@@ -38,7 +40,7 @@ export default async function StoreLayout({
         <Box>{children}</Box>
         <Box sx={{ flexShrink: 0 }}>
           <Footer {...footerProps} />
-          <Copyrights />
+          <Copyrights appName={appName} />
         </Box>
       </Box>
     </>

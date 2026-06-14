@@ -14,6 +14,7 @@ export default async function Layout({
   initcart: React.ReactNode;
   noguest: React.ReactNode;
 }) {
+  let appName: string | undefined;
   let logo: string | undefined;
   const theme = await getAppTheme();
   let guestCurrencyCode: string | null = null;
@@ -27,6 +28,7 @@ export default async function Layout({
   if (!("error" in theme)) {
     const {
       theme: {
+        name,
         logo: resLogo,
         is_address_required,
         unified_contact_phone,
@@ -38,6 +40,7 @@ export default async function Layout({
       },
       currency,
     } = theme.data;
+    appName = name;
     logo = resLogo;
     guestCurrencyCode = currency?.code || null;
     isAddressRequired = is_address_required ?? true;
@@ -53,6 +56,7 @@ export default async function Layout({
 
   return (
     <StoreLayout
+      appName={appName}
       logo={logo}
       isAddressRequired={isAddressRequired}
       unifiedContactPhone={unifiedContactPhone}

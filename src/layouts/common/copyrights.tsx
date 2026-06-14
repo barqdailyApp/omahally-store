@@ -11,7 +11,11 @@ import { SOCIAL_LINKS } from "../config-info";
 
 // ----------------------------------------------------------------------
 
-export default function Copyrights() {
+type CopyrightsProps = {
+  appName?: string;
+};
+
+export default function Copyrights({ appName }: CopyrightsProps) {
   const t = useTranslations("Global.Footer");
 
   return (
@@ -25,7 +29,9 @@ export default function Copyrights() {
           gap={1}
         >
           <Typography color="text.secondary" variant="caption">
-            {t("copyright", { year: new Date().getFullYear() })}
+            {appName
+              ? t("copyright", { year: new Date().getFullYear(), appName })
+              : ""}
           </Typography>
 
           <Stack direction="row" alignItems="center" spacing={0.5}>

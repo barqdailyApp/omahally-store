@@ -59,7 +59,7 @@
       "download": "Download the app",
       "download_ios": "Download from the App Store",
       "download_android": "Download from Google Play",
-      "copyright": "© {year} Barq Daily. All rights reserved.",
+      "copyright": "© {year} {appName}. All rights reserved.",
       "created_by": "Created by",
       "united_contact_number": "United contact number",
       "phone_number": "Phone number",
