@@ -44,6 +44,9 @@ export default function Copyrights({ appName }: CopyrightsProps) {
                 height: { xs: 36, md: 48 },
                 position: "relative",
               }}
+              component={Link}
+              href="https://omahally.com"
+              target="_blank"
             >
               <Image
                 src="/logo/logo-full-620-240.png"
