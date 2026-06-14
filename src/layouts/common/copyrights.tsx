@@ -24,15 +24,17 @@ export default function Copyrights({ appName }: CopyrightsProps) {
         <Stack
           direction={{ xs: "column-reverse", sm: "row" }}
           alignItems="center"
-          justifyContent="space-between"
+          justifyContent={
+            !appName && !SOCIAL_LINKS.length ? "center" : "space-between"
+          }
           py={1}
           gap={1}
         >
-          <Typography color="text.secondary" variant="caption">
-            {appName
-              ? t("copyright", { year: new Date().getFullYear(), appName })
-              : ""}
-          </Typography>
+          {appName && (
+            <Typography color="text.secondary" variant="caption">
+              {t("copyright", { year: new Date().getFullYear(), appName })}
+            </Typography>
+          )}
 
           <Stack direction="row" alignItems="center" spacing={0.5}>
             <Typography color="text.disabled" variant="caption">
@@ -57,19 +59,21 @@ export default function Copyrights({ appName }: CopyrightsProps) {
             </Box>
           </Stack>
 
-          <Stack direction="row" spacing={0.5}>
-            {SOCIAL_LINKS.map((item) => (
-              <IconButton
-                key={item.name}
-                href={item.link}
-                sx={{ color: "text.disabled", p: 0.8 }}
-                target="_blank"
-                LinkComponent={Link}
-              >
-                <Iconify icon={item.icon} width={20} height={20} />
-              </IconButton>
-            ))}
-          </Stack>
+          {SOCIAL_LINKS.length > 0 && (
+            <Stack direction="row" spacing={0.5}>
+              {SOCIAL_LINKS.map((item) => (
+                <IconButton
+                  key={item.name}
+                  href={item.link}
+                  sx={{ color: "text.disabled", p: 0.8 }}
+                  target="_blank"
+                  LinkComponent={Link}
+                >
+                  <Iconify icon={item.icon} width={20} height={20} />
+                </IconButton>
+              ))}
+            </Stack>
+          )}
         </Stack>
       </Container>
     </Box>
