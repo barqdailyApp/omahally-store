@@ -89,7 +89,6 @@ export default function Footer({
       )}
     </Stack>
   );
-
   return (
     <Box
       sx={{
