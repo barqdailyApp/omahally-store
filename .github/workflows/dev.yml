@@ -41,7 +41,7 @@ jobs:
           # Run remote commands using SSH with the correct key
           ssh -i ~/.ssh/id_rsa_new $SERVER_USER@$SERVER_IP << 'EOF'
             source ~/.bashrc
-            cd /var/www/store-dev
+            cd /var/www/omahally-store-dev
             git stash
             git checkout dev
             git pull
@@ -49,9 +49,9 @@ jobs:
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # Load nvm
 
-            nvm use 20 
+            nvm use 20
             npm install -f
             npm run build
-            pm2 restart all
+            pm2 restart omahally-store
           EOF
   
