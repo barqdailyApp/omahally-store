@@ -89,6 +89,14 @@ export default function Footer({
       )}
     </Stack>
   );
+
+  const hasContact = contactItems.length > 0;
+  const hasAppDownload = appStoreLink && playStoreLink;
+
+  if (!hasContact && !hasAppDownload) {
+    return null;
+  }
+
   return (
     <Box
       sx={{
@@ -109,8 +117,8 @@ export default function Footer({
           justifyContent="space-between"
           alignItems="center"
         >
-          {renderContact}
-          {renderAppDownload}
+          {hasContact ? renderContact : null}
+          {hasAppDownload ? renderAppDownload : null}
         </Stack>
       </Container>
     </Box>
