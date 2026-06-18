@@ -39,7 +39,7 @@ export default async function StoreLayout({
       >
         <Box>{children}</Box>
         <Box sx={{ flexShrink: 0 }}>
-          <Footer {...footerProps} />
+          {/* <Footer {...footerProps} /> */}
           <Copyrights appName={appName} />
         </Box>
       </Box>
