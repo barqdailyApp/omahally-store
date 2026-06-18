@@ -1,5 +1,5 @@
 import localFont from "next/font/local";
-import { Barlow } from "next/font/google";
+import { IBM_Plex_Sans_Arabic } from "next/font/google";
 // ----------------------------------------------------------------------
 
 export function remToPx(value: string) {
@@ -45,53 +45,15 @@ declare module "@mui/material/styles" {
 //   display: 'swap',
 //   fallback: ['Helvetica', 'Arial', 'sans-serif'],
 // });
-export const primaryFont = localFont({
-  src: [
-    {
-      path: "./../../public/fonts/SomarRounded-Black.woff2",
-      weight: "900",
-      style: "normal",
-    },
-    {
-      path: "./../../public/fonts/SomarRounded-ExtraBold.woff2",
-      weight: "800",
-      style: "normal",
-    },
-    {
-      path: "./../../public/fonts/SomarRounded-Bold.woff2",
-      weight: "700",
-      style: "normal",
-    },
-    {
-      path: "./../../public/fonts/SomarRounded-SemiBold.woff2",
-      weight: "600",
-      style: "normal",
-    },
-    {
-      path: "./../../public/fonts/SomarRounded-Medium.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "./../../public/fonts/SomarRounded-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "./../../public/fonts/SomarRounded-Light.woff2",
-      weight: "300",
-      style: "normal",
-    },
-    {
-      path: "./../../public/fonts/SomarRounded-Thin.woff2",
-      weight: "200",
-      style: "normal",
-    },
-  ],
+export const primaryFont = IBM_Plex_Sans_Arabic({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  fallback: ["Helvetica", "Arial", "sans-serif"],
 });
 
-export const secondaryFont = Barlow({
-  weight: ["400", "500", "600", "700", "800", "900"],
+export const secondaryFont = IBM_Plex_Sans_Arabic({
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
   fallback: ["Helvetica", "Arial", "sans-serif"],

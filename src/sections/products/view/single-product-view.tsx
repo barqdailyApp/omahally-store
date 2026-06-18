@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import DOMPurify from "isomorphic-dompurify";
 
 import {
   Box,
@@ -30,6 +31,18 @@ import { FullProduct, ProductMeasurement } from "@/types/products";
 import ProductFavButton from "../fav-button";
 import ProductSwiper from "../product-swiper";
 import { useProductFormStore } from "../store/product-form-store";
+
+const sanitizeHtml = (html: string): string => {
+  DOMPurify.addHook("afterSanitizeAttributes", (node) => {
+    if ((node as Element).tagName === "A") {
+      (node as Element).setAttribute("target", "_blank");
+      (node as Element).setAttribute("rel", "noopener noreferrer");
+    }
+  });
+  const clean = DOMPurify.sanitize(html, { ADD_ATTR: ["target"] });
+  DOMPurify.removeHooks("afterSanitizeAttributes");
+  return clean as string;
+};
 
 interface Props {
   product: FullProduct;
@@ -147,9 +160,22 @@ export default function SingleProductView({ product, cartProduct }: Props) {
           </Stack>
         </Box>
       ) : null}
-      <Typography color="text.disabled">
-        {product.product.product_description}
-      </Typography>
+      <Box
+        dangerouslySetInnerHTML={{
+          __html: sanitizeHtml(product.product.product_description || ""),
+        }}
+        sx={{
+          color: 'text.primary',
+          '& img': { maxWidth: '100%', height: 'auto', borderRadius: 1 },
+          '& strong': { fontWeight: 700 },
+          '& em': { fontStyle: 'italic' },
+          '& u': { textDecoration: 'underline' },
+          '& a': { color: 'primary.main', textDecoration: 'underline' },
+          '& ul': { pl: 3, listStyleType: 'disc' },
+          '& ol': { pl: 3, listStyleType: 'decimal' },
+          '& p': { mt: 0, mb: 0, minHeight: '1.4em' },
+        }}
+      />
     </Box>
   );
 
