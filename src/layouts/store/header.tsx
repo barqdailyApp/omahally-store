@@ -26,9 +26,14 @@ import WarehouseSelect from "../common/warehouse-select";
 interface Props {
   logo?: string;
   isAddressRequired?: boolean;
+  simpleHeader?: boolean;
 }
 
-export default function StoreHeader({ logo, isAddressRequired }: Props) {
+export default function StoreHeader({
+  logo,
+  isAddressRequired,
+  simpleHeader,
+}: Props) {
   const theme = useTheme();
 
   const offsetTop = useOffSetTop(HEADER.H_OFFSET);
@@ -37,38 +42,40 @@ export default function StoreHeader({ logo, isAddressRequired }: Props) {
 
   const openXsScreenSearch = useBoolean();
 
+  const renderSearch = isSm ? (
+    <Button
+      onClick={openXsScreenSearch.onToggle}
+      size="small"
+      sx={{
+        minWidth: 0,
+        width: 44,
+        height: 44,
+        borderRadius: 2.5,
+        flexShrink: 0,
+        marginInlineEnd: 1,
+        border: "1px solid",
+        borderColor: "divider",
+        color: "text.primary",
+      }}
+    >
+      <Iconify
+        icon={
+          openXsScreenSearch.value
+            ? "eva:close-outline"
+            : "material-symbols:search"
+        }
+        width={22}
+      />
+    </Button>
+  ) : (
+    <StoreSearch />
+  );
+
   const renderContent = (
     <>
       <Logo image={logo} sx={{ marginInlineStart: 0.5, marginInlineEnd: 1 }} />
 
-      {isSm ? (
-        <Button
-          onClick={openXsScreenSearch.onToggle}
-          size="small"
-          sx={{
-            minWidth: 0,
-            width: 44,
-            height: 44,
-            borderRadius: 2.5,
-            flexShrink: 0,
-            marginInlineEnd: 1,
-            border: "1px solid",
-            borderColor: "divider",
-            color: "text.primary",
-          }}
-        >
-          <Iconify
-            icon={
-              openXsScreenSearch.value
-                ? "eva:close-outline"
-                : "material-symbols:search"
-            }
-            width={22}
-          />
-        </Button>
-      ) : (
-        <StoreSearch />
-      )}
+      {!simpleHeader ? renderSearch : null}
 
       <Stack
         flexGrow={1}
@@ -80,8 +87,8 @@ export default function StoreHeader({ logo, isAddressRequired }: Props) {
       >
         <LanguagePopover isMobile />
         {!isAddressRequired && <WarehouseSelect />}
-        <AccountPopover isMobile={isSm} />
-        <CartButton isMobile={isSm} />
+        {!simpleHeader && <AccountPopover isMobile={isSm} />}
+        {!simpleHeader && <CartButton isMobile={isSm} />}
       </Stack>
     </>
   );

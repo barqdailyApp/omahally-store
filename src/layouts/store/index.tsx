@@ -4,8 +4,8 @@ import { Box } from "@mui/material";
 
 import StoreHeader from "./header";
 import { HEADER } from "../config-layout";
-import Copyrights, { PaymentMethods } from "../common/copyrights";
 import Footer, { FooterProps } from "../common/footer";
+import Copyrights, { PaymentMethods } from "../common/copyrights";
 
 // ----------------------------------------------------------------------
 
@@ -15,6 +15,7 @@ type Props = {
   isAddressRequired?: boolean;
   appName?: string;
   paymentMethods?: PaymentMethods;
+  simpleHeader?: boolean;
 } & FooterProps;
 
 export default async function StoreLayout({
@@ -23,11 +24,16 @@ export default async function StoreLayout({
   isAddressRequired,
   appName,
   paymentMethods,
+  simpleHeader = false,
   ...footerProps
 }: Props) {
   return (
     <>
-      <StoreHeader logo={logo} isAddressRequired={isAddressRequired} />
+      <StoreHeader
+        logo={logo}
+        isAddressRequired={isAddressRequired}
+        simpleHeader={simpleHeader}
+      />
       <Box
         sx={{
           display: "grid",
