@@ -11,12 +11,54 @@ import { SOCIAL_LINKS } from "../config-info";
 
 // ----------------------------------------------------------------------
 
-type CopyrightsProps = {
-  appName?: string;
+export type PaymentMethods = {
+  mada?: boolean;
+  apple_pay?: boolean;
+  tabby?: boolean;
+  card_payments?: boolean;
+  tamara?: boolean;
 };
 
-export default function Copyrights({ appName }: CopyrightsProps) {
+const PAYMENT_ICONS: { key: keyof PaymentMethods; src: string; alt: string }[] =
+  [
+    {
+      key: "mada",
+      src: "https://cdn.salla.network/images/payment/mada_mini.png?v=2.0.5",
+      alt: "Mada",
+    },
+    {
+      key: "card_payments",
+      src: "https://cdn.salla.network/images/payment/credit_card_mini.png?v=2.0.5",
+      alt: "Credit Card",
+    },
+    {
+      key: "apple_pay",
+      src: "https://cdn.salla.network/images/payment/apple_pay_mini.png?v=2.0.5",
+      alt: "Apple Pay",
+    },
+    {
+      key: "tabby",
+      src: "https://cdn.salla.network/images/payment/tabby_installment_mini.png?v=2.0.5",
+      alt: "Tabby",
+    },
+    {
+      key: "tamara",
+      src: "https://cdn.salla.network/images/payment/tamara_installment_mini.png?v=2.0.5",
+      alt: "Tamara",
+    },
+  ];
+
+type CopyrightsProps = {
+  appName?: string;
+  paymentMethods?: PaymentMethods;
+};
+
+export default function Copyrights({
+  appName,
+  paymentMethods,
+}: CopyrightsProps) {
   const t = useTranslations("Global.Footer");
+  console.log(paymentMethods);
 
   return (
     <Box>
@@ -74,6 +116,40 @@ export default function Copyrights({ appName }: CopyrightsProps) {
               ))}
             </Stack>
           )}
+
+          {paymentMethods &&
+            PAYMENT_ICONS.some(({ key }) => paymentMethods[key]) && (
+              <Stack direction="row" gap={0.5} alignItems="center">
+                {PAYMENT_ICONS.filter(({ key }) => paymentMethods[key]).map(
+                  ({ key, src, alt }) => (
+                    <Box
+                      key={key}
+                      sx={{
+                        bgcolor: "white",
+                        borderRadius: 1,
+                        p: 0.25,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Image
+                        src={src}
+                        alt={alt}
+                        width={40}
+                        height={24}
+                        style={{
+                          objectFit: "contain",
+                          display: "block",
+                          height: "24px",
+                          width: "40px",
+                        }}
+                      />
+                    </Box>
+                  ),
+                )}
+              </Stack>
+            )}
         </Stack>
       </Container>
     </Box>

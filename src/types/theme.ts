@@ -17,5 +17,11 @@ export interface AppTheme {
     email: string;
     app_store_link: string;
     play_store_link: string;
+    is_verified: boolean;
+    mada: boolean;
+    apple_pay: boolean;
+    tabby: boolean;
+    card_payments: boolean;
+    tamara: boolean;
   };
 }

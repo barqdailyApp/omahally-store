@@ -25,6 +25,13 @@ export default async function Layout({
   let email: string | undefined;
   let appStoreLink: string | undefined;
   let playStoreLink: string | undefined;
+  let paymentMethods: {
+    mada?: boolean;
+    apple_pay?: boolean;
+    tabby?: boolean;
+    card_payments?: boolean;
+    tamara?: boolean;
+  } = {};
   if (!("error" in theme)) {
     const {
       theme: {
@@ -37,6 +44,11 @@ export default async function Layout({
         email: resEmail,
         app_store_link,
         play_store_link,
+        mada,
+        apple_pay,
+        tabby,
+        card_payments,
+        tamara,
       },
       currency,
     } = theme.data;
@@ -50,6 +62,7 @@ export default async function Layout({
     email = resEmail;
     appStoreLink = app_store_link;
     playStoreLink = play_store_link;
+    paymentMethods = { mada, apple_pay, tabby, card_payments, tamara };
   }
 
   const favAddress = await getFavAddress();
@@ -65,6 +78,7 @@ export default async function Layout({
       email={email}
       appStoreLink={appStoreLink}
       playStoreLink={playStoreLink}
+      paymentMethods={paymentMethods}
     >
       <GuestCurrencySync currencyCode={guestCurrencyCode} />
       <GuestGate
