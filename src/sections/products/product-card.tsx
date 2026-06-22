@@ -236,7 +236,6 @@ export function ProductCard({
             aspectRatio: "4/5",
             objectFit: "contain",
             cursor: "pointer",
-            marginTop: 1.5,
             position: "relative",
           }}
           component="img"
