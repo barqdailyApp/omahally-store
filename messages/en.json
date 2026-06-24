@@ -63,7 +63,9 @@
       "created_by": "Created by",
       "united_contact_number": "United contact number",
       "phone_number": "Phone number",
-      "whatsapp": "WhatsApp"
+      "whatsapp": "WhatsApp",
+      "vat_number": "VAT Number",
+      "commercial_registration_number": "Commercial Registration Number"
     },
     "Date": {
       "sunday": "Sunday",

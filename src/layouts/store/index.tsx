@@ -16,6 +16,9 @@ type Props = {
   appName?: string;
   paymentMethods?: PaymentMethods;
   simpleHeader?: boolean;
+  vatNumber?: string | null;
+  commercialRegistrationNumber?: string | null;
+  isVerified?: boolean;
 } & FooterProps;
 
 export default async function StoreLayout({
@@ -25,6 +28,9 @@ export default async function StoreLayout({
   appName,
   paymentMethods,
   simpleHeader = false,
+  vatNumber,
+  commercialRegistrationNumber,
+  isVerified,
   ...footerProps
 }: Props) {
   return (
@@ -48,7 +54,13 @@ export default async function StoreLayout({
         <Box>{children}</Box>
         <Box sx={{ flexShrink: 0 }}>
           <Footer {...footerProps} />
-          <Copyrights appName={appName} paymentMethods={paymentMethods} />
+          <Copyrights
+            appName={appName}
+            paymentMethods={paymentMethods}
+            vatNumber={vatNumber}
+            commercialRegistrationNumber={commercialRegistrationNumber}
+            isVerified={isVerified}
+          />
         </Box>
       </Box>
     </>

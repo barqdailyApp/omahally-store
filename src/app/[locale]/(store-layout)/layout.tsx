@@ -25,6 +25,9 @@ export default async function Layout({
   let email: string | undefined;
   let appStoreLink: string | undefined;
   let playStoreLink: string | undefined;
+  let vatNumber: string | null | undefined;
+  let commercialRegistrationNumber: string | null | undefined;
+  let isVerified: boolean | undefined;
   let paymentMethods: {
     mada?: boolean;
     apple_pay?: boolean;
@@ -49,6 +52,9 @@ export default async function Layout({
         tabby,
         card_payments,
         tamara,
+        vat_number,
+        commercial_registration_number,
+        is_verified,
       },
       currency,
     } = theme.data;
@@ -62,8 +68,12 @@ export default async function Layout({
     email = resEmail;
     appStoreLink = app_store_link;
     playStoreLink = play_store_link;
+    vatNumber = vat_number;
+    commercialRegistrationNumber = commercial_registration_number;
+    isVerified = is_verified;
     paymentMethods = { mada, apple_pay, tabby, card_payments, tamara };
   }
+  console.log(theme);
 
   const favAddress = await getFavAddress();
 
@@ -79,6 +89,9 @@ export default async function Layout({
       appStoreLink={appStoreLink}
       playStoreLink={playStoreLink}
       paymentMethods={paymentMethods}
+      vatNumber={vatNumber}
+      commercialRegistrationNumber={commercialRegistrationNumber}
+      isVerified={isVerified}
     >
       <GuestCurrencySync currencyCode={guestCurrencyCode} />
       <GuestGate

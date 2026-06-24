@@ -51,17 +51,78 @@ const PAYMENT_ICONS: { key: keyof PaymentMethods; src: string; alt: string }[] =
 type CopyrightsProps = {
   appName?: string;
   paymentMethods?: PaymentMethods;
+  vatNumber?: string | null;
+  commercialRegistrationNumber?: string | null;
+  isVerified?: boolean;
 };
 
 export default function Copyrights({
   appName,
   paymentMethods,
+  vatNumber,
+  commercialRegistrationNumber,
+  isVerified,
 }: CopyrightsProps) {
   const t = useTranslations("Global.Footer");
-  console.log(paymentMethods);
+
+  const hasBusinessInfo =
+    vatNumber || commercialRegistrationNumber || isVerified;
 
   return (
     <Box>
+      {hasBusinessInfo && (
+        <Container>
+          <Stack
+            direction="column"
+            alignItems="flex-start"
+            py={1}
+            gap={1}
+            sx={{ borderBottom: "1px solid", borderColor: "divider" }}
+          >
+            {vatNumber && (
+              <Stack direction="row" alignItems="flex-end" gap={1}>
+                <Image
+                  src="/assets/images/footer/vat.png"
+                  alt="VAT"
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  style={{ width: "100px", height: "auto", display: "block" }}
+                />
+                <Typography color="text.secondary" variant="caption" pb={1}>
+                  {t("vat_number")}: {vatNumber}
+                </Typography>
+              </Stack>
+            )}
+            {isVerified && (
+              <Box
+                sx={{
+                  position: "relative",
+                  width: 240,
+                  height: 80,
+                }}
+              >
+                <Image
+                  src="/assets/images/footer/saudi_business_center.png"
+                  fill
+                  alt="Saudi Business Center"
+                  style={{ objectFit: "contain", objectPosition: "left" }}
+                />
+              </Box>
+            )}
+            {commercialRegistrationNumber && (
+              <Typography
+                color="text.secondary"
+                variant="caption"
+                paddingInlineStart={1}
+              >
+                {t("commercial_registration_number")}:{" "}
+                {commercialRegistrationNumber}
+              </Typography>
+            )}
+          </Stack>
+        </Container>
+      )}
       <Container>
         <Stack
           direction={{ xs: "column-reverse", sm: "row" }}

@@ -63,7 +63,9 @@
       "created_by": "تم التطوير بواسطة",
       "united_contact_number": "رقم الاتصال الموحد",
       "phone_number": "رقم الجوال",
-      "whatsapp": "الواتس"
+      "whatsapp": "الواتس",
+      "vat_number": "الرقم الضريبي",
+      "commercial_registration_number": "رقم السجل التجاري"
     },
     "Date": {
       "sunday": "الأحد",
