@@ -183,11 +183,14 @@ export interface Collection {
   name_ar: string;
   in_header: boolean;
   black_color_view: boolean;
-  image: string;
+  image: string | null | undefined;
   description: string;
   is_active: boolean;
   order_by: number;
   is_grid: boolean;
+  is_banner: boolean;
+  is_clickable: boolean;
+  size: "SMALL" | "MEDIUM" | "BIG";
 }
 
 export interface CollectionWithProducts {

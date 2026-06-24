@@ -9,6 +9,7 @@ import { Autoplay, Navigation } from "swiper/modules";
 import { Box, Stack, styled, IconButton } from "@mui/material";
 
 import { paths } from "@/routes/paths";
+
 import { HEADER } from "@/layouts/config-layout";
 import { LocaleType, localesSettings } from "@/i18n/config-locale";
 
