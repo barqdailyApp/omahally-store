@@ -73,7 +73,6 @@ export default async function Layout({
     isVerified = is_verified;
     paymentMethods = { mada, apple_pay, tabby, card_payments, tamara };
   }
-  console.log(theme);
 
   const favAddress = await getFavAddress();
 

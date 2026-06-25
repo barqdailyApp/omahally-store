@@ -198,3 +198,7 @@ export interface CollectionWithProducts {
   products: Product[];
   productCount: number;
 }
+export interface PaginatedCollectionWithProducts {
+  collection: Collection;
+  products: { data: Product[]; meta: { itemCount: number } };
+}

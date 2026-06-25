@@ -17,6 +17,7 @@ import {
   FullProduct,
   CategoryGroup,
   CollectionWithProducts,
+  PaginatedCollectionWithProducts,
 } from "@/types/products";
 
 import { getFavAddress } from "./auth-methods";
@@ -241,6 +242,38 @@ export async function fetchProductsByCollection(
   return {
     items: res?.data?.data,
     pagesCount: Math.ceil((res?.data?.meta?.itemCount || 0) / limit),
+  };
+}
+export async function fetchCollectionById(
+  collectionId: string,
+  page = 1,
+  limit = 50,
+) {
+  const cookieStore = await cookies();
+  const user = cookieStore.get(COOKIES_KEYS.user)?.value;
+  const userId = user ? JSON.parse(user).id : null;
+
+  const favAddress = await getFavAddress();
+
+  const searchParams = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+    user_id: userId || "",
+    latitude: favAddress?.latitude || "",
+    longitude: favAddress?.longitude || "",
+  });
+  const res = await getData<PaginatedCollectionWithProducts>(
+    `${endpoints.products.singleCollection(collectionId)}?${searchParams.toString()}`,
+  );
+
+  if ("error" in res) {
+    return res;
+  }
+  return {
+    data: res.data,
+    pagesCount: Math.ceil(
+      (res.data.products.meta.itemCount || 0) / PRODUCTS_PER_PAGE,
+    ),
   };
 }
 

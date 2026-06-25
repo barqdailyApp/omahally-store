@@ -10,7 +10,7 @@ export default function SectionHeadding({
   href,
 }: {
   titleName: string;
-  href: string;
+  href?: string;
 }) {
   const t = useTranslations("Pages.Home");
 
@@ -25,29 +25,31 @@ export default function SectionHeadding({
         <Typography variant="h3" sx={{ textAlign: "start" }}>
           {titleName}
         </Typography>
-        <Link
-          href={href}
-          variant="h6"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 0.25,
-            "&:hover": {
-              textDecoration: "underline",
-              textDecorationColor: "primary.light",
-              textDecorationThickness: "2px",
-              textUnderlineOffset: "4px",
-            },
-          }}
-          component={RouterLink}
-        >
-          {t("action")}
-          <Iconify
-            icon="weui:arrow-filled"
-            sx={{ "[dir='rtl'] &": { transform: "scaleX(-1)" } }}
-            width={24}
-          />
-        </Link>
+        {href && (
+          <Link
+            href={href}
+            variant="h6"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 0.25,
+              "&:hover": {
+                textDecoration: "underline",
+                textDecorationColor: "primary.light",
+                textDecorationThickness: "2px",
+                textUnderlineOffset: "4px",
+              },
+            }}
+            component={RouterLink}
+          >
+            {t("action")}
+            <Iconify
+              icon="weui:arrow-filled"
+              sx={{ "[dir='rtl'] &": { transform: "scaleX(-1)" } }}
+              width={24}
+            />
+          </Link>
+        )}
       </Stack>
 
       {/* divider */}

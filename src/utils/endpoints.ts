@@ -20,6 +20,8 @@ export const endpoints = {
     brands: "product/get-brands-client",
     offers: "product/all-products-offers-for-client",
     collections: "product/get-collections",
+    singleCollection: (collectionId: string) =>
+      `product/collection/${collectionId}`,
     favorite: ({
       productId,
       sectionId,

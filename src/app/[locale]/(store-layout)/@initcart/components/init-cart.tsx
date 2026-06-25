@@ -30,9 +30,7 @@ export default function InitCart() {
   } = usecheckoutStore();
 
   useEffect(() => {
-    console.log("Initializing cart...");
     if (!authenticated) {
-      console.log("User not authenticated, initializing guest cart...");
       (async () => {
         let isAddressRequried = true;
         const appTheme = await getAppTheme();
@@ -75,14 +73,12 @@ export default function InitCart() {
         }
 
         const addressesRes = await fetchAddresses();
-        console.log({ addressesRes, isAddressRequried });
 
         if ("error" in addressesRes) {
           if (addressesRes.status !== 401)
             enqueueSnackbar(addressesRes.error, { variant: "error" });
         } else {
           if (isAddressRequried && addressesRes.length === 0) {
-            console.log("No addresses found, opening address dialog...");
             setAddressDialogOpen(true);
           }
           setAddresses(addressesRes, isAddressRequried);
