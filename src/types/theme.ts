@@ -23,5 +23,7 @@ export interface AppTheme {
     tabby: boolean;
     card_payments: boolean;
     tamara: boolean;
+    vat_number: string | null;
+    commercial_registration_number: string | null;
   };
 }
