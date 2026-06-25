@@ -27,7 +27,7 @@ export default function Footer({
     { label: t("united_contact_number"), value: unifiedContactPhone },
     { label: t("phone_number"), value: mobileContactPhone },
     { label: t("whatsapp"), value: whatsappNumber },
-    { value: email },
+    { label: t("email"), value: email },
   ].filter((item) => !!item.value) as { label?: string; value: string }[];
 
   const renderContact = (
@@ -45,8 +45,8 @@ export default function Footer({
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: { xs: 1, sm: 0.5 },
-            justifyContent: { xs: "space-between", sm: "flex-start" },
+            gap: { xs: 1, sm: 2 },
+            justifyContent: "space-between",
           }}
           key={index}
         >
