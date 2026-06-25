@@ -73,56 +73,68 @@ export default function Copyrights({
       {hasBusinessInfo && (
         <Container>
           <Stack
-            direction="column"
-            alignItems="flex-start"
-            py={1}
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            flexWrap="wrap"
+            py={1.5}
             gap={1}
             sx={{ borderBottom: "1px solid", borderColor: "divider" }}
           >
             {vatNumber && (
-              <Stack direction="row" alignItems="flex-end" gap={1}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="center"
+                gap={1}
+              >
                 <Image
                   src="/assets/images/footer/vat.png"
                   alt="VAT"
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  style={{ width: "100px", height: "auto", display: "block" }}
+                  width={60}
+                  height={60}
                 />
-                <Typography color="text.secondary" variant="caption" pb={1}>
-                  {t("vat_number")}: {vatNumber}
-                </Typography>
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t("vat_number")}
+                  </Typography>
+                  <Typography variant="caption" fontWeight={700}>
+                    {vatNumber}
+                  </Typography>
+                </Box>
+              </Stack>
+            )}
+            {commercialRegistrationNumber && (
+              <Stack direction="row" alignItems="center" gap={1}>
+                <Image
+                  src="https://cdn.salla.network/cdn-cgi/image/fit=scale-down,width=70,height=70,onerror=redirect,format=auto/images/commercial-register.png"
+                  alt="Commercial Registration"
+                  width={50}
+                  height={50}
+                  style={{ width: "auto", height: "50px", display: "block" }}
+                />
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t("commercial_registration_number")}
+                  </Typography>
+                  <Typography variant="caption" fontWeight={700}>
+                    {commercialRegistrationNumber}
+                  </Typography>
+                </Box>
               </Stack>
             )}
             {isVerified && (
-              <Box
-                sx={{
-                  position: "relative",
-                  width: 240,
-                  height: 80,
-                }}
-              >
-                <Image
-                  src="/assets/images/footer/saudi_business_center.png"
-                  fill
-                  alt="Saudi Business Center"
-                  style={{ objectFit: "contain", objectPosition: "left" }}
-                />
-              </Box>
-            )}
-            {commercialRegistrationNumber && (
-              <Typography
-                color="text.secondary"
-                variant="caption"
-                paddingInlineStart={1}
-              >
-                {t("commercial_registration_number")}:{" "}
-                {commercialRegistrationNumber}
-              </Typography>
+              <Image
+                src="/assets/images/footer/saudi_business_center.png"
+                width={220}
+                height={55}
+                alt="Saudi Business Center"
+              />
             )}
           </Stack>
         </Container>
       )}
+
       <Container>
         <Stack
           direction={{ xs: "column-reverse", sm: "row" }}
