@@ -96,18 +96,23 @@ export default function OrderSumamry() {
         ? [
             {
               label: t("Summary.tax_rate"),
-              value: <>{Number(taxRate ?? 0)}% ({currency((Number(taxRate ?? 0) / 100) * (totalWithDiscount + deliveryFee))})</>,
+              value: (
+                <>
+                  {Number(taxRate ?? 0)}% (
+                  {currency(
+                    (Number(taxRate ?? 0) / 100) *
+                      (totalWithDiscount + deliveryFee),
+                  )}
+                  )
+                </>
+              ),
             },
           ]
         : []),
 
       {
         label: t("Summary.total"),
-        value: currency(
-          totalWithDiscount +
-            deliveryFee +
-            (Number(taxRate ?? 0) / 100) * totalWithDiscount,
-        ),
+        value: currency(totalWithDiscount + deliveryFee),
       },
       { value: <PromoCodeField /> },
     ];
