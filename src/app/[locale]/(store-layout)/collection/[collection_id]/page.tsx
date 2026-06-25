@@ -1,14 +1,11 @@
 import { getTranslations } from "next-intl/server";
 
-import { Alert, Box } from "@mui/material";
+import { Box, Alert } from "@mui/material";
 
-import {
-  fetchCollectionById,
-  fetchProductsByCollection,
-} from "@/actions/products-actions";
+import { fetchCollectionById } from "@/actions/products-actions";
 
-import ProductsListView from "@/sections/products/view/products-list-view";
 import SectionHeadding from "@/sections/home/components/section-headding";
+import ProductsListView from "@/sections/products/view/products-list-view";
 
 interface Props {
   params: {
