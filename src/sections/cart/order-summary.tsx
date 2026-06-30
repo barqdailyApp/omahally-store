@@ -32,6 +32,7 @@ export default function OrderSumamry() {
   const {
     step,
     setStep,
+
     choosenDeliveryType,
     day,
     timeSlot,
@@ -47,8 +48,13 @@ export default function OrderSumamry() {
   } = useCartStore();
 
   const deliveryFee = useMemo(
-    () => (isDigital ? 0 : initDeliveryFee),
-    [initDeliveryFee, isDigital],
+    () =>
+      isDigital ||
+      choosenDeliveryType === "WAREHOUSE_PICKUP" ||
+      !choosenDeliveryType
+        ? 0
+        : initDeliveryFee,
+    [initDeliveryFee, isDigital, choosenDeliveryType],
   );
 
   const { totalWithDiscount, discount } = useMemo(() => {
