@@ -4,6 +4,7 @@ import { DeliveryType } from "@/types/profile";
 
 export interface FullCart {
   is_digital: boolean;
+  products_class: "PHYSICAL" | "DIGITAL" | "SERVICE" | "MIXED";
   delivery_fee: number;
   products: CartProduct[];
   warehouse: {

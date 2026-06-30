@@ -45,6 +45,7 @@ interface InitialState {
   isAddressRequired: boolean;
 
   isDigital: boolean;
+  productsClass?: "PHYSICAL" | "DIGITAL" | "SERVICE" | "MIXED";
 }
 
 interface CheckoutStateActions {
@@ -83,6 +84,9 @@ interface CheckoutStateActions {
   setIsAddressRequired: (isAddressRequired: boolean) => void;
 
   setIsDigital: (is_digital: boolean) => void;
+  setProductsClass: (
+    productsClass: "PHYSICAL" | "DIGITAL" | "SERVICE" | "MIXED",
+  ) => void;
 }
 
 const initialState: InitialState = {
@@ -116,6 +120,7 @@ const initialState: InitialState = {
   isAddressRequired: true,
 
   isDigital: false,
+  productsClass: undefined,
 };
 
 export const usecheckoutStore = create<InitialState & CheckoutStateActions>()(
@@ -198,6 +203,7 @@ export const usecheckoutStore = create<InitialState & CheckoutStateActions>()(
     setWarehouseId: (warehouseId) => set(() => ({ warehouseId })),
     setTaxRate: (taxRate) => set(() => ({ taxRate })),
     setIsDigital: (isDigital) => set(() => ({ isDigital })),
+    setProductsClass: (productsClass) => set(() => ({ productsClass })),
     setIsAddressRequired: (isAddressRequired) =>
       set(() => ({ isAddressRequired })),
   }),

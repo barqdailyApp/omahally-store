@@ -24,6 +24,7 @@ export default function InitCart() {
     setPayments,
     setCurrencies,
     setIsDigital,
+    setProductsClass,
     setTaxRate,
     setWarehouseId,
     setIsAddressRequired,
@@ -63,6 +64,7 @@ export default function InitCart() {
         } else {
           initProducts(cartRes.products);
           setIsDigital(cartRes.is_digital);
+          setProductsClass(cartRes.products_class);
           setTaxRate(cartRes.warehouse?.tax_rate);
           setWarehouseId(cartRes.warehouse?.id ?? null);
           setMinOrderPrice(Number(cartRes.warehouse?.min_order_price));
@@ -116,6 +118,7 @@ export default function InitCart() {
     setIsDigital,
     setMinOrderPrice,
     setPayments,
+    setProductsClass,
     setTaxRate,
     setWarehouseId,
   ]);

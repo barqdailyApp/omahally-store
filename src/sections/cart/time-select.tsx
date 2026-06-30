@@ -42,6 +42,7 @@ export default function TimeSelect() {
     day,
     setDay,
     warehouseId,
+    productsClass,
   } = usecheckoutStore();
 
   const [slotsMap, setSlotsMap] = useState<Record<string, TimeSlot[]>>({});
@@ -110,37 +111,42 @@ export default function TimeSelect() {
     setTimeSlot(slotsMap[key]?.[0] || null);
   };
 
-  const renderDeliveryTypes = deliveryTypes.map((item, index) => (
-    <Fragment key={item}>
-      {index !== 0 ? <Divider flexItem /> : null}
+  const renderDeliveryTypes = deliveryTypes
+    .map((item) => ({
+      label: productsClass === "SERVICE" ? `${item}_${productsClass}` : item,
+      value: item,
+    }))
+    .map(({ value, label }, index) => (
+      <Fragment key={value}>
+        {index !== 0 ? <Divider flexItem /> : null}
 
-      <ButtonBase onClick={() => setChoosenDeliveryType(item)}>
-        <Stack
-          direction="row"
-          spacing={1}
-          alignItems="center"
-          justifyContent="space-between"
-          width="100%"
-          py={1.5}
-          paddingInlineStart={1.5}
-        >
-          <Typography>{t(`DeliveryTypes.${item}`)}</Typography>
+        <ButtonBase onClick={() => setChoosenDeliveryType(value)}>
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            justifyContent="space-between"
+            width="100%"
+            py={1.5}
+            paddingInlineStart={1.5}
+          >
+            <Typography>{t(`DeliveryTypes.${label}`)}</Typography>
 
-          {item === "FAST" && (
-            <Label
-              color="warning"
-              marginInlineStart="auto"
-              sx={{ bgcolor: "warning.main", color: "white" }}
-            >
-              {Math.trunc(choosenAddress?.delivery_time || 40)} {t("minutes")}
-            </Label>
-          )}
+            {value === "FAST" && (
+              <Label
+                color="warning"
+                marginInlineStart="auto"
+                sx={{ bgcolor: "warning.main", color: "white" }}
+              >
+                {Math.trunc(choosenAddress?.delivery_time || 40)} {t("minutes")}
+              </Label>
+            )}
 
-          <Switch checked={choosenDeliveryType === item} />
-        </Stack>
-      </ButtonBase>
-    </Fragment>
-  ));
+            <Switch checked={choosenDeliveryType === value} />
+          </Stack>
+        </ButtonBase>
+      </Fragment>
+    ));
 
   const renderDeliveryTime = (
     <>

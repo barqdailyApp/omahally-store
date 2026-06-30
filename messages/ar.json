@@ -296,7 +296,10 @@
       "DeliveryTypes": {
         "FAST": "توصيل سريع",
         "SCHEDULED": "توصيل مجدول",
-        "WAREHOUSE_PICKUP": "استلام من المستودع"
+        "WAREHOUSE_PICKUP": "استلام من المتجر",
+        "FAST_SERVICE": "توصيل سريع",
+        "SCHEDULED_SERVICE": "الخدمة في موقع العميل",
+        "WAREHOUSE_PICKUP_SERVICE": "الخدمة في المتجر"
       },
       "TimeZones": {
         "NIGHT": "ليلًا",

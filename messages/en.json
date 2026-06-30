@@ -295,7 +295,10 @@
       "DeliveryTypes": {
         "FAST": "Fast Delivery",
         "SCHEDULED": "Scheduled Delivery",
-        "WAREHOUSE_PICKUP": "Pickup from warehouse"
+        "WAREHOUSE_PICKUP": "Pickup from Store",
+        "FAST_SERVICE": "Fast Delivery",
+        "SCHEDULED_SERVICE": "Service at customer location",
+        "WAREHOUSE_PICKUP_SERVICE": " Service at Store"
       },
       "TimeZones": {
         "NIGHT": "Night",
