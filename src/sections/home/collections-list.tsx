@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useMemo } from "react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -17,14 +18,8 @@ import CollectionsSwiper from "./collections-swiper";
 import SectionHeadding from "./components/section-headding";
 import ProductsListView from "../products/view/products-list-view";
 
-const BANNER_BASE_HEIGHT = `(100svh - ${HEADER.H_SIMPLE + HEADER.H_MOBILE}px)`;
-
-const BANNER_HEIGHT_MAP = {
-  BIG: `calc(${BANNER_BASE_HEIGHT})`,
-  MEDIUM: `calc(${BANNER_BASE_HEIGHT} / 2)`,
-  SMALL: `calc(${BANNER_BASE_HEIGHT} / 3)`,
-};
-
+const bannerMaxHeight = (devidedBy: number) =>
+  `calc((100svh - ${HEADER.H_SIMPLE + HEADER.H_MOBILE}px) / ${devidedBy})`;
 interface Props {
   collections: CollectionWithProducts[];
 }
@@ -34,25 +29,23 @@ export default function CollectionsList({ collections }: Props) {
 
   return (
     <Box py={SECTION_PADDING}>
-      <Container>
-        <Stack spacing={4}>
-          {collections
-            .filter(
-              (item) => item.collection.is_banner || item.products?.length,
-            )
-            .map((item) =>
-              item.collection.is_banner ? (
-                <CollectionBanner key={item.collection.id} item={item} />
-              ) : (
+      <Stack spacing={4}>
+        {collections
+          .filter((item) => item.collection.is_banner || item.products?.length)
+          .map((item) =>
+            item.collection.is_banner ? (
+              <CollectionBanner key={item.collection.id} item={item} />
+            ) : (
+              <Container>
                 <CollectionRow
                   key={item.collection.id}
                   item={item}
                   locale={locale}
                 />
-              ),
-            )}
-        </Stack>
-      </Container>
+              </Container>
+            ),
+          )}
+      </Stack>
     </Box>
   );
 }
@@ -61,17 +54,29 @@ function CollectionBanner({ item }: { item: CollectionWithProducts }) {
   const router = useRouter();
   const { collection } = item;
 
+  const { size } = collection;
+  const devidedBy = useMemo(() => {
+    switch (size) {
+      case "BIG":
+        return 1;
+      case "MEDIUM":
+        return 2;
+      default:
+        return 3;
+    }
+  }, [size]);
+
   if (!collection.image) return null;
 
   const href = `${paths.collections}/${collection.id}`;
-  const height = BANNER_HEIGHT_MAP[collection.size ?? "BIG"];
-
   return (
     <Box
       sx={{
         position: "relative",
         width: "100%",
-        height,
+        height: "auto",
+        maxHeight: bannerMaxHeight(devidedBy),
+        aspectRatio: `36/${19 / devidedBy}`,
         borderRadius: "10px",
         overflow: "hidden",
         cursor: collection.is_clickable ? "pointer" : "default",
