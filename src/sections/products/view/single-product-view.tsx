@@ -125,6 +125,11 @@ export default function SingleProductView({ product, cartProduct }: Props) {
 
   const renderContent = (
     <Box>
+      {product.product.barcode && (
+        <Typography variant="caption" color="text.secondary" component="p">
+          {product.product.barcode}
+        </Typography>
+      )}
       <Typography variant="h4" component="p">
         {product.product.product_name}
       </Typography>

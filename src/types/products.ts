@@ -52,6 +52,7 @@ export interface Product {
   product_logo: string;
   product_price_id: string;
   product_price: string;
+  barcode?: string | null;
   min_order_quantity: number;
   max_order_quantity: number;
   product_measurement_id: string;
@@ -70,6 +71,7 @@ export interface FullProduct {
     product_is_fav: boolean;
     is_quantity_available: boolean;
     product_logo: string;
+    barcode?: string | null;
     product_images: string[];
     product_option_groups: ProductOptionGroup[];
     type: "SIMPLE" | "BUNDLE";
@@ -169,6 +171,7 @@ export interface Offer {
   product_logo: string;
   product_price_id: string;
   product_price: string;
+  barcode?: string | null;
   min_order_quantity: number;
   max_order_quantity: number;
   product_measurement_id: string;

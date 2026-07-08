@@ -312,10 +312,19 @@ export function ProductCard({
             sx={{
               alignSelf: "stretch",
               display: "grid",
-              gridTemplateRows: "auto auto",
+              gridTemplateRows: "auto auto auto",
               alignContent: "space-between",
             }}
           >
+            {product.barcode && (
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ flex: "0 0 auto" }}
+              >
+                {product.barcode}
+              </Typography>
+            )}
             <Typography
               variant="body1"
               fontWeight={600}
