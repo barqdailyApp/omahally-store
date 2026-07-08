@@ -2,14 +2,17 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-import { Tabs, Button } from "@mui/material";
+import { Button } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 import { useQueryString } from "@/hooks/use-queryString";
 
-import { SubCategory } from "@/types/products";
+import ScrollableRow from "@/CustomSharedComponents/scrollable-row";
+
+import { SubCategoryTab } from "@/types/products";
 
 interface Props {
-  subCategories: SubCategory[];
+  subCategories: SubCategoryTab[];
   initialSubCategoryId: string | undefined;
 }
 
@@ -20,6 +23,8 @@ export default function SubCategoriesFilter({
   const [subCategoryId, setSubCategoryId] = useState(initialSubCategoryId);
 
   const { createQueryString } = useQueryString();
+  const theme = useTheme();
+  const isRTL = theme.direction === "rtl";
 
   const handleChange = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
@@ -45,15 +50,7 @@ export default function SubCategoriesFilter({
   }, [handleChange, initialSubCategoryId, subCategories, subCategoryId]);
 
   return (
-    <Tabs
-      aria-label="Choose product sub category"
-      value={subCategoryId}
-      TabIndicatorProps={{
-        sx: {
-          display: "none",
-        },
-      }}
-    >
+    <ScrollableRow isRTL={isRTL}>
       {subCategories.map((item, index) => (
         <Button
           variant={item.id === subCategoryId ? "contained" : "outlined"}
@@ -66,6 +63,6 @@ export default function SubCategoriesFilter({
           {item.name}
         </Button>
       ))}
-    </Tabs>
+    </ScrollableRow>
   );
 }

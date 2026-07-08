@@ -5,8 +5,7 @@ import { Alert } from "@mui/material";
 import { LocaleType } from "@/i18n/config-locale";
 import {
   fetchCategories,
-  fetchSubCategories,
-  fetchProductsBySubCategory,
+  fetchSubCategoriesWithProducts,
 } from "@/actions/products-actions";
 
 import CategoriesFilter from "@/sections/products/categories-filter";
@@ -46,12 +45,15 @@ export default async function Page({
     return renderCategoriesFilter;
   }
 
-  const subCategories = await fetchSubCategories(selectedCategoryId);
-  if ("error" in subCategories) {
-    throw new Error(subCategories.error);
+  const subCategoryGroups = await fetchSubCategoriesWithProducts(
+    selectedCategoryId,
+    Number(page || "1"),
+  );
+  if ("error" in subCategoryGroups) {
+    throw new Error(subCategoryGroups.error);
   }
 
-  if (subCategories.length === 0) {
+  if (subCategoryGroups.length === 0) {
     return (
       <>
         {renderCategoriesFilter}
@@ -62,6 +64,7 @@ export default async function Page({
     );
   }
 
+  const subCategories = subCategoryGroups.map((group) => group.subcategory);
   const selectedSubCategoryId = subCategoryId || subCategories[0]?.id;
 
   const renderSubCategoriesFilter = (
@@ -80,15 +83,12 @@ export default async function Page({
     );
   }
 
-  const products = await fetchProductsBySubCategory(
-    selectedSubCategoryId,
-    Number(page || "1")
-  );
+  const products =
+    subCategoryGroups.find(
+      (group) => group.subcategory.id === selectedSubCategoryId,
+    )?.products || [];
 
-  if ("error" in products) {
-    return <Alert severity="error">{products.error}</Alert>;
-  }
-  if (products.pagesCount === 0) {
+  if (products.length === 0) {
     return (
       <>
         {renderCategoriesFilter}
@@ -102,10 +102,7 @@ export default async function Page({
     <>
       {renderCategoriesFilter}
       {renderSubCategoriesFilter}
-      <ProductsListView
-        products={products.items}
-        pagesCount={products.pagesCount}
-      />
+      <ProductsListView products={products} pagesCount={1} />
     </>
   );
 }

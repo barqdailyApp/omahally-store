@@ -7,12 +7,12 @@ import { paths } from "@/routes/paths";
 import { SECTION_PADDING } from "@/layouts/config-layout";
 import ParamsPagination from "@/CustomSharedComponents/params-pagination";
 
-import { Offer, Product } from "@/types/products";
+import { Offer, Product, SubCategoryProduct } from "@/types/products";
 
 import { ProductCard } from "../product-card";
 
 interface Props {
-  products: (Product | Offer)[];
+  products: (Product | Offer | SubCategoryProduct)[];
   pagesCount: number;
 }
 

@@ -79,5 +79,24 @@ function NProgressDone() {
     NProgress.done();
   }, [pathname, router, searchParams]);
 
+  useEffect(() => {
+    const originalPush = router.push.bind(router);
+    const originalReplace = router.replace.bind(router);
+
+    router.push = (...args: Parameters<typeof router.push>) => {
+      NProgress.start();
+      return originalPush(...args);
+    };
+    router.replace = (...args: Parameters<typeof router.replace>) => {
+      NProgress.start();
+      return originalReplace(...args);
+    };
+
+    return () => {
+      router.push = originalPush;
+      router.replace = originalReplace;
+    };
+  }, [router]);
+
   return null;
 }

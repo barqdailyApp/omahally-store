@@ -26,13 +26,9 @@ export interface CategoryGroup {
   categories: Category[];
 }
 
-export interface SubCategory {
+export interface SubCategoryTab {
   id: string;
-  sub_category_id: string;
   name: string;
-  order_by: number;
-  logo: string;
-  is_active: boolean;
 }
 
 export interface Product {
@@ -60,6 +56,36 @@ export interface Product {
   measurement_unit: string;
   measurement_unit_en: string;
   cart_products: any | null;
+}
+
+export interface SubCategoryProduct {
+  direct_add: boolean;
+  product_category_price_id: string;
+  offer_id: string | null;
+  offer_price: number | null;
+  offer_quantity: number | null;
+  offer_description: string | null;
+  is_quantity_available: boolean;
+  warehouse_quantity: number;
+  product_id: string;
+  barcode?: string | null;
+  product_name: string;
+  product_logo: string | null;
+  product_class: string;
+  product_price_id: string;
+  product_price: number;
+  min_order_quantity: number;
+  max_order_quantity: number;
+  product_measurement_id: string;
+  measurement_unit_id: string;
+  measurement_unit: string;
+  product_is_fav: boolean;
+  cart_products: any | null;
+}
+
+export interface SubCategoryWithProducts {
+  subcategory: SubCategoryTab;
+  products: SubCategoryProduct[];
 }
 
 export interface FullProduct {

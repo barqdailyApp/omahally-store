@@ -32,12 +32,12 @@ import Label from "@/components/label";
 import Iconify from "@/components/iconify";
 import { useSnackbar } from "@/components/snackbar";
 
-import { Offer, Product } from "@/types/products";
+import { Offer, Product, SubCategoryProduct } from "@/types/products";
 
 import IncrementerButton from "./incrementer-button";
 
 interface Props {
-  product: Product | Offer;
+  product: Product | Offer | SubCategoryProduct;
   href: string;
 }
 
@@ -229,7 +229,7 @@ export function ProductCard({
       />
       <Box position="relative">
         <CardMedia
-          src={product.product_logo}
+          src={product.product_logo ?? undefined}
           alt={product.product_name}
           sx={{
             height: "auto",

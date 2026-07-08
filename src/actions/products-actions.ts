@@ -13,9 +13,9 @@ import {
   Product,
   Section,
   Category,
-  SubCategory,
   FullProduct,
   CategoryGroup,
+  SubCategoryWithProducts,
   CollectionWithProducts,
   PaginatedCollectionWithProducts,
 } from "@/types/products";
@@ -69,9 +69,24 @@ export async function fetchCategoryGroups() {
   return categoriesRes.data;
 }
 
-export async function fetchSubCategories(categoryId: string) {
-  const res = await getData<SubCategory[]>(
-    `${endpoints.products.subCategories(categoryId)}?all=false`,
+export async function fetchSubCategoriesWithProducts(
+  categoryId: string,
+  page = 1,
+) {
+  const user = JSON.parse(cookies().get(COOKIES_KEYS.user)?.value || "{}");
+  const favAddress = await getFavAddress();
+
+  const searchParams = new URLSearchParams({
+    section_category_id: categoryId,
+    page: String(page),
+    limit: String(PRODUCTS_PER_PAGE),
+    sort: "new",
+    user_id: user.id || "",
+  });
+  appendFavAddressParams(searchParams, favAddress);
+
+  const res = await getData<SubCategoryWithProducts[]>(
+    `${endpoints.products.subCategoriesWithProducts}?${searchParams.toString()}`,
   );
 
   if ("error" in res) {

@@ -14,6 +14,7 @@ export const endpoints = {
     categoryGroups: "section/client/section-category-group",
     subCategories: (categoryId: string) =>
       `category/${categoryId}/subcategories`,
+    subCategoriesWithProducts: "product/all-products-subcategories-client",
     products: "product/all-products-for-client",
     favoriteList: "product/all-Product-favorite",
     singleProduct: "product/single-product-client",

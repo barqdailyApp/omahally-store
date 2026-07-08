@@ -1,4 +1,4 @@
-import { Theme } from '@mui/material/styles';
+import { alpha, Theme } from '@mui/material/styles';
 import { tabClasses } from '@mui/material/Tab';
 
 // ----------------------------------------------------------------------
@@ -11,8 +11,19 @@ export function tabs(theme: Theme) {
           backgroundColor: theme.palette.text.primary,
         },
         scrollButtons: {
-          width: 48,
+          width: 36,
+          height: 36,
           borderRadius: '50%',
+          margin: theme.spacing(0, 0.5),
+          color: theme.palette.text.primary,
+          backgroundColor: alpha(theme.palette.grey[500], 0.08),
+          transition: theme.transitions.create('background-color'),
+          '&:hover': {
+            backgroundColor: alpha(theme.palette.grey[500], 0.16),
+          },
+          '&.Mui-disabled': {
+            opacity: 0.48,
+          },
         },
       },
     },
