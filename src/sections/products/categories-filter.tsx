@@ -2,9 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-import { Tab, Tabs } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { Box, Typography } from "@mui/material";
 
 import { useQueryString } from "@/hooks/use-queryString";
+
+import ScrollableRow from "@/CustomSharedComponents/scrollable-row";
 
 import { Category } from "@/types/products";
 
@@ -20,9 +23,11 @@ export default function CategoriesFilter({
   const [categoryId, setCategoryId] = useState(initialCategoryId);
 
   const { createQueryString } = useQueryString();
+  const theme = useTheme();
+  const isRTL = theme.direction === "rtl";
 
   const handleChange = useCallback(
-    (event: React.SyntheticEvent, newValue: string) => {
+    (newValue: string) => {
       setCategoryId(newValue);
       createQueryString(
         [
@@ -40,19 +45,60 @@ export default function CategoriesFilter({
       !initialCategoryId ||
       !categories.find((item) => item.id === categoryId)
     ) {
-      handleChange({} as React.SyntheticEvent, categories[0].id);
+      handleChange(categories[0].id);
     }
   }, [handleChange, categories, categoryId, initialCategoryId]);
 
   return (
-    <Tabs
-      value={categoryId}
-      onChange={handleChange}
-      aria-label="Choose product category"
-    >
-      {categories.map((item) => (
-        <Tab label={item.name} key={item.id} value={item.id} sx={{ px: 1 }} />
-      ))}
-    </Tabs>
+    <ScrollableRow isRTL={isRTL}>
+      {categories.map((item) => {
+        const selected = item.id === categoryId;
+        return (
+          <Box
+            key={item.id}
+            onClick={() => handleChange(item.id)}
+            sx={{
+              cursor: "pointer",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+              p: 1.5,
+              width: 84,
+              flexShrink: 0,
+              mx: 0.5,
+              borderRadius: 2,
+              border: "1px solid",
+              borderColor: selected ? "primary.main" : "divider",
+              backgroundColor: "background.paper",
+              transition: (t) =>
+                t.transitions.create(["border-color", "box-shadow"]),
+              ...(selected && {
+                boxShadow: (t) => `0 0 0 1px ${t.palette.primary.main}`,
+              }),
+            }}
+          >
+            {item.logo && (
+              <Box
+                component="img"
+                src={item.logo}
+                alt={item.name}
+                sx={{ width: 40, height: 40, objectFit: "contain" }}
+              />
+            )}
+            <Typography
+              variant="caption"
+              textAlign="center"
+              noWrap
+              sx={{ maxWidth: "100%" }}
+              color={selected ? "primary.main" : "text.primary"}
+            >
+              {item.name}
+            </Typography>
+          </Box>
+        );
+      })}
+    </ScrollableRow>
   );
 }
