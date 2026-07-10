@@ -65,7 +65,8 @@ export default function CategoriesFilter({
               justifyContent: "center",
               gap: 1,
               p: 1.5,
-              width: 84,
+              width: 92,
+              minHeight: 96,
               flexShrink: 0,
               mx: 0.5,
               borderRadius: 2,
@@ -90,9 +91,15 @@ export default function CategoriesFilter({
             <Typography
               variant="caption"
               textAlign="center"
-              noWrap
-              sx={{ maxWidth: "100%" }}
               color={selected ? "primary.main" : "text.primary"}
+              sx={{
+                maxWidth: "100%",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                lineHeight: 1.3,
+              }}
             >
               {item.name}
             </Typography>
