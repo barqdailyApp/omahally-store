@@ -72,7 +72,6 @@ export interface PromoCode {
 interface InitialState {
   promocode: PromoCode | null;
   products: CartProduct[];
-  productsQuantity: number;
   totalPrice: number;
   minOrderPrice: number;
   deliveryFee: number;
@@ -91,7 +90,6 @@ interface CartStateActions {
 const initialState: InitialState = {
   promocode: null,
   products: [],
-  productsQuantity: 0,
   totalPrice: 0,
   minOrderPrice: 0,
   deliveryFee: 0,
@@ -132,7 +130,6 @@ export const useCartStore = create<InitialState & CartStateActions>()(
               }
             : {
                 products: [...updatedProducts, newProduct],
-                productsQuantity: state.productsQuantity + 1,
                 totalPrice:
                   state.totalPrice +
                   (newProduct.product_price +
@@ -155,14 +152,12 @@ export const useCartStore = create<InitialState & CartStateActions>()(
 
         return {
           products: state.products.filter((product) => product.id !== id),
-          productsQuantity: state.productsQuantity - 1,
           totalPrice: state.totalPrice - oldProductPrice,
         };
       }),
     initProducts: (products) => {
       set({
         products,
-        productsQuantity: products.length,
         totalPrice: products.reduce(
           (acc, product) =>
             acc +

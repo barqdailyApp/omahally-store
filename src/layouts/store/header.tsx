@@ -16,6 +16,7 @@ import Iconify from "@/components/iconify";
 
 import StoreSearch from "./search";
 import CartButton from "./cart-button";
+import HeaderTicker from "./header-ticker";
 import { HEADER } from "../config-layout";
 import AccountPopover from "../common/account-popover";
 import LanguagePopover from "../common/language-popover";
@@ -112,11 +113,13 @@ export default function StoreHeader({
         }),
       }}
     >
-      <Container sx={{ minHeight: "100%" }}>
-        <Toolbar sx={{ height: HEADER.H_MOBILE }}>{renderContent}</Toolbar>
+      <Container sx={{ minHeight: HEADER.H_TOOLBAR }}>
+        <Toolbar sx={{ height: HEADER.H_TOOLBAR }}>{renderContent}</Toolbar>
 
         {isSm && openXsScreenSearch.value && <StoreSearch />}
       </Container>
+
+      <HeaderTicker text="استمتع بتجربة تسوق مريحة واطلب الآن بأسعار مخفضة" />
     </AppBar>
   );
 }

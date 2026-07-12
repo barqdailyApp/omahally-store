@@ -19,7 +19,9 @@ interface CartButtonProps {
 
 export default function CartButton({ isMobile }: CartButtonProps) {
   const t = useTranslations("Global.Label");
-  const quantity = useCartStore((state) => state.productsQuantity);
+  const quantity = useCartStore((state) =>
+    state.products.reduce((sum, product) => sum + product.quantity, 0),
+  );
 
   const cartLabel = t("cart");
 

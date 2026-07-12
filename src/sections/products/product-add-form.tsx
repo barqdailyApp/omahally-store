@@ -256,9 +256,9 @@ export default function ProductAddForm({ full = false }: { full?: boolean }) {
       setProduct(res);
       setCartProductId(res.id);
 
-      enqueueSnackbar("Product added to cart", { variant: "success" });
+      enqueueSnackbar(t("add_to_cart_success"), { variant: "success" });
     } catch (error) {
-      enqueueSnackbar("Failed to add product to cart", { variant: "error" });
+      enqueueSnackbar(t("add_to_cart_failed"), { variant: "error" });
     } finally {
       setLoading(false);
     }
