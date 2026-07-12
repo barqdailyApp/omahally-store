@@ -31,6 +31,11 @@ export interface SubCategoryTab {
   name: string;
 }
 
+export interface ProductTag {
+  id: string;
+  name: string;
+}
+
 export interface Product {
   direct_add: boolean;
   section_id: string;
@@ -49,6 +54,7 @@ export interface Product {
   product_price_id: string;
   product_price: string;
   barcode?: string | null;
+  tags?: ProductTag[];
   min_order_quantity: number;
   max_order_quantity: number;
   product_measurement_id: string;
@@ -69,6 +75,7 @@ export interface SubCategoryProduct {
   warehouse_quantity: number;
   product_id: string;
   barcode?: string | null;
+  tags?: ProductTag[];
   product_name: string;
   product_logo: string | null;
   product_class: string;
@@ -98,6 +105,7 @@ export interface FullProduct {
     is_quantity_available: boolean;
     product_logo: string;
     barcode?: string | null;
+    tags?: ProductTag[];
     product_images: string[];
     product_option_groups: ProductOptionGroup[];
     type: "SIMPLE" | "BUNDLE";
@@ -198,6 +206,7 @@ export interface Offer {
   product_price_id: string;
   product_price: string;
   barcode?: string | null;
+  tags?: ProductTag[];
   min_order_quantity: number;
   max_order_quantity: number;
   product_measurement_id: string;

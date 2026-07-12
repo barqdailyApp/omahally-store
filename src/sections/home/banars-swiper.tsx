@@ -158,6 +158,7 @@ export default function BanarsSwiper({ banars }: Props) {
         aspectRatio: "36/19",
         maxHeight: BANNER_MAX_HEIGHT,
         marginInline: "auto",
+        mt: 2.5,
       }}
     >
       {renderSwiper}

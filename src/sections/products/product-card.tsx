@@ -241,18 +241,27 @@ export function ProductCard({
           component="img"
         />
 
-        {!product.is_quantity_available && (
-          <Label
-            color="error"
-            sx={{
-              position: "absolute",
-              top: 6,
-              insetInlineStart: 6,
-            }}
-          >
-            {t("no_available")}
-          </Label>
-        )}
+        <Stack
+          spacing={0.5}
+          alignItems="flex-start"
+          sx={{
+            position: "absolute",
+            top: 6,
+            insetInlineStart: 6,
+            zIndex: 1,
+          }}
+        >
+          {!!product.tags?.length &&
+            product.tags.map((tag) => (
+              <Label key={tag.id} color="info" variant="filled">
+                {tag.name}
+              </Label>
+            ))}
+
+          {!product.is_quantity_available && (
+            <Label color="error">{t("no_available")}</Label>
+          )}
+        </Stack>
 
         {product.is_quantity_available && offerPrice && offerPercentage > 0 && (
           <Label
@@ -268,28 +277,35 @@ export function ProductCard({
           </Label>
         )}
 
-        {cartProduct && (
-          <Button
-            component={RouterLink}
-            href="/cart"
-            variant="soft"
-            color="primary"
-            size="small"
-            sx={{
-              position: "absolute",
-              top: 6,
-              insetInlineEnd: 6,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 0.5,
-              zIndex: 1,
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Iconify icon="bxs:cart-alt" width={14} />
-            {t("in_cart")}
-          </Button>
-        )}
+        <Stack
+          spacing={0.5}
+          alignItems="flex-end"
+          sx={{
+            position: "absolute",
+            top: 6,
+            insetInlineEnd: 6,
+            zIndex: 1,
+          }}
+        >
+          {cartProduct && (
+            <Button
+              component={RouterLink}
+              href="/cart"
+              variant="soft"
+              color="primary"
+              size="small"
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 0.5,
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Iconify icon="bxs:cart-alt" width={14} />
+              {t("in_cart")}
+            </Button>
+          )}
+        </Stack>
       </Box>
 
       <CardContent

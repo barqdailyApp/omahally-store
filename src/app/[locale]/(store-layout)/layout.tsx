@@ -9,13 +9,16 @@ export default async function Layout({
   children,
   initcart,
   noguest,
+  params: { locale },
 }: {
   children: React.ReactNode;
   initcart: React.ReactNode;
   noguest: React.ReactNode;
+  params: { locale: string };
 }) {
   let appName: string | undefined;
   let logo: string | undefined;
+  let ticker: string | undefined;
   const theme = await getAppTheme();
   let guestCurrencyCode: string | null = null;
   let isAddressRequired = true;
@@ -40,6 +43,8 @@ export default async function Layout({
       theme: {
         name,
         logo: resLogo,
+        ticker_ar,
+        ticker_en,
         is_address_required,
         unified_contact_phone,
         mobile_contact_phone,
@@ -60,6 +65,7 @@ export default async function Layout({
     } = theme.data;
     appName = name;
     logo = resLogo;
+    ticker = (locale === "ar" ? ticker_ar : ticker_en) || undefined;
     guestCurrencyCode = currency?.code || null;
     isAddressRequired = is_address_required ?? true;
     unifiedContactPhone = unified_contact_phone;
@@ -80,6 +86,7 @@ export default async function Layout({
     <StoreLayout
       appName={appName}
       logo={logo}
+      ticker={ticker}
       isAddressRequired={isAddressRequired}
       unifiedContactPhone={unifiedContactPhone}
       mobileContactPhone={mobileContactPhone}

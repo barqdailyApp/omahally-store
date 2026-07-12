@@ -1,19 +1,22 @@
 "use client";
 
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 import Iconify from "@/components/iconify";
 
 import { HEADER } from "../config-layout";
+import styles from "./header-ticker.module.css";
 
 const REPEAT_COUNT = 4;
-const SCROLL_DURATION = 22;
 
 interface Props {
   text: string;
 }
 
 export default function HeaderTicker({ text }: Props) {
+  const theme = useTheme();
+
   const renderGroup = (groupKey: string) => (
     <Stack direction="row" alignItems="center" sx={{ flexShrink: 0 }}>
       {Array.from({ length: REPEAT_COUNT }).map((_, index) => (
@@ -25,42 +28,31 @@ export default function HeaderTicker({ text }: Props) {
           sx={{ px: 2 }}
         >
           <Typography
-            variant="caption"
+            variant="body2"
             fontWeight={600}
             color="common.white"
             whiteSpace="nowrap"
           >
             {text}
           </Typography>
-          <Iconify icon="eva:flash-fill" width={14} sx={{ color: "common.white" }} />
+          <Iconify icon="eva:flash-fill" width={16} sx={{ color: "common.white" }} />
         </Stack>
       ))}
     </Stack>
   );
 
   return (
-    <Box
-      sx={{
+    <div
+      className={styles.wrapper}
+      style={{
         height: HEADER.H_TICKER,
-        bgcolor: "primary.main",
-        overflow: "hidden",
-        display: "flex",
-        alignItems: "center",
+        backgroundColor: theme.palette.primary.main,
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          animation: `ticker-scroll ${SCROLL_DURATION}s linear infinite`,
-          "@keyframes ticker-scroll": {
-            from: { transform: "translateX(0)" },
-            to: { transform: "translateX(-50%)" },
-          },
-        }}
-      >
+      <div className={styles.track}>
         {renderGroup("a")}
         {renderGroup("b")}
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 }

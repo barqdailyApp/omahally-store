@@ -26,12 +26,14 @@ import WarehouseSelect from "../common/warehouse-select";
 
 interface Props {
   logo?: string;
+  ticker?: string;
   isAddressRequired?: boolean;
   simpleHeader?: boolean;
 }
 
 export default function StoreHeader({
   logo,
+  ticker,
   isAddressRequired,
   simpleHeader,
 }: Props) {
@@ -98,7 +100,10 @@ export default function StoreHeader({
     <AppBar
       sx={{
         top: 0,
-        height: HEADER.H_MOBILE + (isSm && openXsScreenSearch.value ? 60 : 0),
+        height:
+          HEADER.H_TOOLBAR +
+          (ticker ? HEADER.H_TICKER : 0) +
+          (isSm && openXsScreenSearch.value ? 60 : 0),
         overflow: "hidden",
         borderBottom: `solid 1px ${theme.palette.divider}`,
         zIndex: theme.zIndex.appBar,
@@ -119,7 +124,7 @@ export default function StoreHeader({
         {isSm && openXsScreenSearch.value && <StoreSearch />}
       </Container>
 
-      <HeaderTicker text="استمتع بتجربة تسوق مريحة واطلب الآن بأسعار مخفضة" />
+      {ticker && <HeaderTicker text={ticker} />}
     </AppBar>
   );
 }

@@ -12,6 +12,7 @@ import Copyrights, { PaymentMethods } from "../common/copyrights";
 type Props = {
   children: React.ReactNode;
   logo?: string;
+  ticker?: string;
   isAddressRequired?: boolean;
   appName?: string;
   paymentMethods?: PaymentMethods;
@@ -24,6 +25,7 @@ type Props = {
 export default async function StoreLayout({
   children,
   logo,
+  ticker,
   isAddressRequired,
   appName,
   paymentMethods,
@@ -33,10 +35,13 @@ export default async function StoreLayout({
   isVerified,
   ...footerProps
 }: Props) {
+  const headerHeight = HEADER.H_TOOLBAR + (ticker ? HEADER.H_TICKER : 0);
+
   return (
     <>
       <StoreHeader
         logo={logo}
+        ticker={ticker}
         isAddressRequired={isAddressRequired}
         simpleHeader={simpleHeader}
       />
@@ -45,7 +50,7 @@ export default async function StoreLayout({
           display: "grid",
           gridTemplateRows: "1fr auto",
           gridTemplateColumns: "100%",
-          pt: `${HEADER.H_MOBILE}px`,
+          pt: `${headerHeight}px`,
           minHeight: "100%",
           overflow: "hidden",
           width: "100%",

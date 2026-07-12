@@ -221,8 +221,27 @@ export default function SingleProductView({ product, cartProduct }: Props) {
   return (
     <Container sx={{ py: SECTION_PADDING }}>
       <Stack direction={{ md: "row" }} spacing={2}>
-        <Box flexShrink={0} maxWidth={{ md: "50%" }}>
+        <Box flexShrink={0} maxWidth={{ md: "50%" }} position="relative">
           {renderSwiper}
+
+          {!!product.product.tags?.length && (
+            <Stack
+              spacing={0.5}
+              alignItems="flex-start"
+              sx={{
+                position: "absolute",
+                top: 22,
+                insetInlineStart: 22,
+                zIndex: 1,
+              }}
+            >
+              {product.product.tags.map((tag) => (
+                <Label key={tag.id} color="info" variant="filled">
+                  {tag.name}
+                </Label>
+              ))}
+            </Stack>
+          )}
         </Box>
 
         <Stack spacing={2} flexGrow={1}>
