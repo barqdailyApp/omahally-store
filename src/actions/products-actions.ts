@@ -15,8 +15,8 @@ import {
   Category,
   FullProduct,
   CategoryGroup,
-  SubCategoryWithProducts,
   CollectionWithProducts,
+  SubCategoryWithProducts,
   PaginatedCollectionWithProducts,
 } from "@/types/products";
 

@@ -271,6 +271,7 @@ export default function ProductAddForm({ full = false }: { full?: boolean }) {
     measurement.product_category_price?.product_category_price_id,
     selectedOptions,
     setProduct,
+    t,
   ]);
 
   return (

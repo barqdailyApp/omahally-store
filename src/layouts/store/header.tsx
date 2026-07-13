@@ -16,8 +16,8 @@ import Iconify from "@/components/iconify";
 
 import StoreSearch from "./search";
 import CartButton from "./cart-button";
-import HeaderTicker from "./header-ticker";
 import { HEADER } from "../config-layout";
+import HeaderTicker from "./header-ticker";
 import AccountPopover from "../common/account-popover";
 import LanguagePopover from "../common/language-popover";
 import WarehouseSelect from "../common/warehouse-select";

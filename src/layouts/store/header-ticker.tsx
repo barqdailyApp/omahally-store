@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Typography } from "@mui/material";
+import { useRef, useState, useEffect } from "react";
+
 import { useTheme } from "@mui/material/styles";
 
 import { HEADER } from "../config-layout";
@@ -26,7 +26,7 @@ export default function HeaderTicker({ text }: Props) {
   useEffect(() => {
     const wrapper = wrapperRef.current;
     const setA = setARef.current;
-    if (!wrapper || !setA) return;
+    if (!wrapper || !setA) return undefined;
 
     const measure = () => {
       const wrapperW = wrapper.offsetWidth;

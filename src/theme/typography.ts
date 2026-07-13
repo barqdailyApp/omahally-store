@@ -1,4 +1,3 @@
-import localFont from "next/font/local";
 import { IBM_Plex_Sans_Arabic } from "next/font/google";
 // ----------------------------------------------------------------------
 

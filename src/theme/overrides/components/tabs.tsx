@@ -1,5 +1,5 @@
-import { alpha, Theme } from '@mui/material/styles';
 import { tabClasses } from '@mui/material/Tab';
+import { alpha, Theme } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
