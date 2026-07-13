@@ -8,7 +8,34 @@
 .track {
   display: flex;
   width: max-content;
-  animation: ticker-scroll 34s linear infinite;
+  /* Paused until JS measures the set width and injects --ticker-translate */
+  animation: ticker-scroll 30s linear infinite;
+  /* If JS hasn't run yet, fall back to 0 (no jump) */
+  --ticker-translate: 0px;
+}
+
+/* Each duplicated set sits side by side in the track */
+.set {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Individual text item */
+.item {
+  display: inline-block;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #fff;
+  padding: 0 20px;
+}
+
+/* Bullet separator after each item */
+.item::after {
+  content: "•";
+  padding-left: 20px;
+  opacity: 0.6;
 }
 
 @keyframes ticker-scroll {
@@ -16,6 +43,6 @@
     transform: translateX(0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translateX(var(--ticker-translate));
   }
 }
