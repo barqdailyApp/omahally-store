@@ -59,6 +59,7 @@ export const endpoints = {
     list: "currency",
   },
   banars: "banar/guest",
+  banarPopup: "banar/Popup/guest",
   orders: {
     single: (order_id: string) => `order/single-order/${order_id}`,
     list: "order/client-orders",

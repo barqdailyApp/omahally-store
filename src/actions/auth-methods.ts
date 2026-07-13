@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { endpoints } from "@/utils/endpoints";
 import { postData } from "@/utils/crud-fetch-api";
 
-import { COOKIES_KEYS } from "@/config-global";
+import { COOKIES_KEYS, LOGIN_SESSION_MAX_AGE } from "@/config-global";
 
 import { Address } from "@/types/profile";
 
@@ -63,8 +63,10 @@ export async function verifyOtp(reqBody: verifyOtpCredentials) {
   const { id, name, avatar, email, phone, access_token: token } = res.data;
   const user = { id, name, avatar, email, phone };
 
-  cookies().set(COOKIES_KEYS.session, token);
-  cookies().set(COOKIES_KEYS.user, JSON.stringify(user));
+  cookies().set(COOKIES_KEYS.session, token, { maxAge: LOGIN_SESSION_MAX_AGE });
+  cookies().set(COOKIES_KEYS.user, JSON.stringify(user), {
+    maxAge: LOGIN_SESSION_MAX_AGE,
+  });
 
   return { ...user };
 }

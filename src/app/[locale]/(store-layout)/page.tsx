@@ -10,6 +10,7 @@ import BrandsView from "@/sections/home/view/brands-view";
 import OffersView from "@/sections/home/view/offers-view";
 import BannersView from "@/sections/home/view/banners-view";
 import CategoriesView from "@/sections/home/view/categories-view";
+import PopupBanarView from "@/sections/home/view/popup-banar-view";
 import OrderAgainView from "@/sections/home/view/order-again-view";
 import BrandsLoading from "@/sections/home/loading/brands-loading";
 import OffersLoading from "@/sections/home/loading/offers-loading";
@@ -29,6 +30,10 @@ export default async function Page() {
 
   return (
     <>
+      <Suspense fallback={null}>
+        <PopupBanarView />
+      </Suspense>
+
       <Suspense fallback={<BannersLoading />}>
         <BannersView />
       </Suspense>

@@ -8,7 +8,7 @@ import { Autoplay, Navigation } from "swiper/modules";
 
 import { Box, Stack, styled, IconButton } from "@mui/material";
 
-import { paths } from "@/routes/paths";
+import { getBanarHref } from "@/utils/get-banar-href";
 
 import { HEADER } from "@/layouts/config-layout";
 import { LocaleType, localesSettings } from "@/i18n/config-locale";
@@ -34,15 +34,6 @@ const StyledButton = styled(IconButton)(({ theme }) => ({
 
 interface Props {
   banars: Banar[];
-}
-
-function getBanarHref(banar: Banar): string | null {
-  if (!banar.ref_type || !banar.ref_id) return null;
-  if (banar.ref_type === "PRODUCT") return `${paths.products}/${banar.ref_id}`;
-  if (banar.ref_type === "COLLECTION")
-    return `${paths.collections}/${banar.ref_id}`;
-  if (banar.ref_type === "SUBCATEGORY") return `/subcategory/${banar.ref_id}`;
-  return null;
 }
 
 export default function BanarsSwiper({ banars }: Props) {

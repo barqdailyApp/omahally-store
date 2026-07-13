@@ -16,6 +16,9 @@ export const PATH_AFTER_LOGIN = paths.home; // as '/dashboard'
 
 export const SESSION_PERIOD = 60 * 30 * 1_000; //  (60 seconds * 30 * (1_000 = 1s)) = 30 Minutes;
 
+// cookies().set's `maxAge` expects seconds, not milliseconds
+export const LOGIN_SESSION_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
+
 export const COOKIES_KEYS = {
   session: "session",
   user: "user",
@@ -25,6 +28,7 @@ export const COOKIES_KEYS = {
   warehouseId: "sammartstore-warehouse-id",
   warehouseCurrency: "sammartstore-warehouse-currency",
   tenantId: "sammartstore-tenant-id",
+  popupBanarSeen: "sammartstore-popup-banar-seen",
 };
 
 export const PRODUCTS_PER_PAGE = 35;

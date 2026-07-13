@@ -12,3 +12,11 @@ export async function fetchBanars() {
   }
   return res?.data;
 }
+
+export async function fetchPopupBanar() {
+  const res = await getData<Banar>(endpoints.banarPopup);
+  if ("error" in res) {
+    return res;
+  }
+  return res?.data?.id ? res.data : null;
+}
