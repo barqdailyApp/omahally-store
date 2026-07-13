@@ -348,9 +348,9 @@ export function ProductCard({
               sx={{
                 flex: "1 1 auto",
                 minWidth: 0,
-                "-webkit-line-clamp": "2",
                 display: "-webkit-box",
-                "-webkit-box-orient": "vertical",
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: "vertical",
                 overflow: "hidden",
                 minHeight: 0,
                 height: "fit-content",

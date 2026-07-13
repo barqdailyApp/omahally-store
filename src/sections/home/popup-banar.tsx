@@ -39,8 +39,10 @@ export default function PopupBanar({ banar }: Props) {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogContent sx={{ p: 0, lineHeight: 0, position: "relative" }}>
+    <Dialog open={open} onClose={handleClose} maxWidth="sm">
+      <DialogContent
+        sx={{ p: 0, lineHeight: 0, position: "relative", overflow: "hidden" }}
+      >
         <IconButton
           aria-label="close"
           onClick={handleClose}
@@ -61,17 +63,23 @@ export default function PopupBanar({ banar }: Props) {
 
         <Box
           onClick={handleImageClick}
-          sx={{ cursor: href ? "pointer" : "default" }}
+          sx={{
+            cursor: href ? "pointer" : "default",
+            display: "flex",
+            justifyContent: "center",
+          }}
         >
           <Image
             src={banar.banar}
             alt=" "
             width={700}
-            height={700}
+            height={1000}
             style={{
-              width: "100%",
+              width: "auto",
               height: "auto",
-              aspectRatio: "1/1",
+              maxWidth: "100%",
+              maxHeight: "85vh",
+              display: "block",
               objectFit: "contain",
             }}
           />
