@@ -1,8 +1,11 @@
 "use client";
 
+import { useLocale } from "next-intl";
 import { useRef, useState, useEffect } from "react";
 
 import { useTheme } from "@mui/material/styles";
+
+import { LocaleType, localesSettings } from "@/i18n/config-locale";
 
 import { HEADER } from "../config-layout";
 import styles from "./header-ticker.module.css";
@@ -18,6 +21,8 @@ interface Props {
 
 export default function HeaderTicker({ text }: Props) {
   const theme = useTheme();
+  const locale = useLocale();
+  const isRTL = localesSettings[locale as LocaleType].dir === "rtl";
   const wrapperRef = useRef<HTMLDivElement>(null);
   const setARef = useRef<HTMLDivElement>(null);
   const [copies, setCopies] = useState(MIN_COPIES);
@@ -56,9 +61,10 @@ export default function HeaderTicker({ text }: Props) {
     return () => ro.disconnect();
   }, [text]);
 
-  const animStyle = setWidth
-    ? ({ "--ticker-translate": `-${setWidth}px` } as React.CSSProperties)
-    : undefined;
+  const animStyle: React.CSSProperties = {
+    animationDirection: isRTL ? "reverse" : "normal",
+    ...(setWidth && { "--ticker-translate": `-${setWidth}px` }),
+  } as React.CSSProperties;
 
   const renderItems = (prefix: string) =>
     Array.from({ length: copies }).map((_, i) => (

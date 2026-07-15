@@ -9,6 +9,7 @@
   display: flex;
   width: max-content;
   /* Paused until JS measures the set width and injects --ticker-translate */
+  /* animation-direction is set per-locale via inline style */
   animation: ticker-scroll 30s linear infinite;
   /* If JS hasn't run yet, fall back to 0 (no jump) */
   --ticker-translate: 0px;
