@@ -236,7 +236,11 @@ export default function SingleProductView({ product, cartProduct }: Props) {
               }}
             >
               {product.product.tags.map((tag) => (
-                <Label key={tag.id} color="info" variant="filled">
+                <Label
+                  key={tag.id}
+                  variant="filled"
+                  sx={{ bgcolor: "secondary.main", color: "primary.main" }}
+                >
                   {tag.name}
                 </Label>
               ))}
