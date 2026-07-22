@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 
 import { useTheme } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
@@ -21,6 +21,7 @@ export default function CategoriesFilter({
   initialCategoryId,
 }: Props) {
   const [categoryId, setCategoryId] = useState(initialCategoryId);
+  const selectedRef = useRef<HTMLDivElement>(null);
 
   const { createQueryString } = useQueryString();
   const theme = useTheme();
@@ -49,6 +50,14 @@ export default function CategoriesFilter({
     }
   }, [handleChange, categories, categoryId, initialCategoryId]);
 
+  useEffect(() => {
+    selectedRef.current?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [categoryId]);
+
   return (
     <ScrollableRow isRTL={isRTL}>
       {categories.map((item) => {
@@ -56,6 +65,7 @@ export default function CategoriesFilter({
         return (
           <Box
             key={item.id}
+            ref={selected ? selectedRef : undefined}
             onClick={() => handleChange(item.id)}
             sx={{
               cursor: "pointer",

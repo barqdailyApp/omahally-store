@@ -12,7 +12,6 @@ import {
   Offer,
   Product,
   Section,
-  Category,
   FullProduct,
   CategoryGroup,
   CollectionWithProducts,
@@ -37,22 +36,6 @@ export async function fetchSections() {
     return sectionRes;
   }
   return sectionRes.data;
-}
-
-export async function fetchCategories() {
-  const sectionRes = await fetchSections();
-  if ("error" in sectionRes) {
-    return sectionRes;
-  }
-
-  const sectionId = sectionRes[0]?.id;
-  const categoriesRes = await getData<Category[]>(
-    `${endpoints.products.categories(sectionId)}?all=false`,
-  );
-  if ("error" in categoriesRes) {
-    return categoriesRes;
-  }
-  return categoriesRes.data;
 }
 
 interface CategoryGroupsResponse {

@@ -4,7 +4,7 @@ import { Alert } from "@mui/material";
 
 import { LocaleType } from "@/i18n/config-locale";
 import {
-  fetchCategories,
+  fetchCategoryGroups,
   fetchSubCategoriesWithProducts,
 } from "@/actions/products-actions";
 
@@ -24,11 +24,15 @@ export default async function Page({
 }: Props) {
   const t = await getTranslations();
 
-  const categories = await fetchCategories();
+  const categoryGroups = await fetchCategoryGroups();
 
-  if ("error" in categories) {
-    throw new Error(categories.error);
+  if ("error" in categoryGroups) {
+    throw new Error(categoryGroups.error);
   }
+
+  const categories = categoryGroups.section_categories.flatMap(
+    (group) => group.categories,
+  );
 
   if (categories.length === 0) {
     return (

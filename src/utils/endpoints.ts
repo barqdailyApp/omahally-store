@@ -10,10 +10,7 @@ export const endpoints = {
   },
   products: {
     sections: "section",
-    categories: (sectionId: string) => `section/${sectionId}/categories`,
     categoryGroups: "section/client/section-category-group",
-    subCategories: (categoryId: string) =>
-      `category/${categoryId}/subcategories`,
     subCategoriesWithProducts: "product/all-products-subcategories-client",
     products: "product/all-products-for-client",
     favoriteList: "product/all-Product-favorite",
