@@ -34,6 +34,7 @@ export const endpoints = {
     fetchProductById: (cart_product_id: string) => `cart/${cart_product_id}`,
     add: "cart/add",
     delete: (cart_product_id: string) => `cart/delete/${cart_product_id}`,
+    clear: "cart/clear",
     update: "cart/update/{cart}-product",
     updateOptions: "cart/update-options",
     timeSlots: (delivery_day: string) => `slot/${delivery_day}/all-slots`,

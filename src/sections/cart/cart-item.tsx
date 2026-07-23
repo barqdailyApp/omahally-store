@@ -1,14 +1,17 @@
 import Image from "next/image";
+import { useSnackbar } from "notistack";
 import { useTranslations } from "next-intl";
+import { useState, useCallback } from "react";
 
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Box,
   Chip,
   Link,
   Stack,
   Tooltip,
-  IconButton,
   Typography,
+  IconButton,
 } from "@mui/material";
 
 import { paths } from "@/routes/paths";
@@ -16,7 +19,8 @@ import { RouterLink } from "@/routes/components";
 
 import { useCurrency } from "@/utils/format-number";
 
-import { CartProduct } from "@/contexts/cart-store";
+import { removeCartProduct } from "@/actions/cart-actions";
+import { CartProduct, useCartStore } from "@/contexts/cart-store";
 
 import Iconify from "@/components/iconify";
 
@@ -26,6 +30,22 @@ export default function CartItem({ product }: { product: CartProduct }) {
   const t = useTranslations("Pages.Orders.Single.Shipment");
   const tCart = useTranslations("Pages.Cart");
   const currency = useCurrency();
+  const { enqueueSnackbar } = useSnackbar();
+  const removeProduct = useCartStore((state) => state.removeProduct);
+  const [removing, setRemoving] = useState(false);
+
+  const handleRemove = useCallback(async () => {
+    setRemoving(true);
+    const res = await removeCartProduct(product.id);
+
+    if (res && "error" in res) {
+      enqueueSnackbar(res.error, { variant: "error" });
+      setRemoving(false);
+    } else {
+      removeProduct(product.id);
+    }
+  }, [enqueueSnackbar, product.id, removeProduct]);
+
   const unitPrice = product.product_price + product.hidden_options_price;
 
   const totalPrice = (unitPrice + product.options_price) * product.quantity;
@@ -141,7 +161,7 @@ export default function CartItem({ product }: { product: CartProduct }) {
             <Iconify icon="gridicons:external" />
           </IconButton>
         </Tooltip>
-        <Tooltip title={tCart("update_item") || "Update Item"}>
+        <Tooltip title={tCart("update_item")}>
           <IconButton
             component={RouterLink}
             href={`${paths.cart}/${product.id}`}
@@ -151,6 +171,24 @@ export default function CartItem({ product }: { product: CartProduct }) {
           >
             <Iconify icon="boxicons:edit" />
           </IconButton>
+        </Tooltip>
+        <Tooltip title={tCart("remove_item")}>
+          <LoadingButton
+            onClick={handleRemove}
+            loading={removing}
+            size="small"
+            color="error"
+            sx={{
+              flexShrink: 0,
+              minWidth: 0,
+              width: 34,
+              height: 34,
+              p: 0,
+              borderRadius: "50%",
+            }}
+          >
+            <Iconify icon="mage:trash" />
+          </LoadingButton>
         </Tooltip>
 
         <IncrementerButton

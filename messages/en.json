@@ -267,7 +267,11 @@
     "Cart": {
       "minutes": "Minutes",
       "view_product": "View Product",
+      "update_item": "Update Item",
+      "remove_item": "Remove Item",
       "no_delivery_available_that_day": "No delivery available that day, please choose another day",
+      "clear_cart": "Clear Cart",
+      "clear_cart_confirm": "Are you sure you want to remove all items from your cart?",
       "Steps": {
         "cart": "Adding items",
         "time-location": "Time & Location",

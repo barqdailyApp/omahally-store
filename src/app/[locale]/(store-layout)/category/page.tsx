@@ -30,15 +30,20 @@ export default async function Page({
     throw new Error(categoryGroups.error);
   }
 
-  const categories = categoryGroups.section_categories.flatMap(
-    (group) => group.categories,
-  );
+  const allGroups = categoryGroups.section_categories;
 
-  if (categories.length === 0) {
+  if (allGroups.every((group) => group.categories.length === 0)) {
     return (
       <Alert severity="error">{t("Global.Error.no_categories_found")}</Alert>
     );
   }
+
+  const selectedGroup =
+    allGroups.find((group) =>
+      group.categories.some((item) => item.id === categoryId),
+    ) || allGroups.find((group) => group.categories.length > 0);
+
+  const categories = selectedGroup?.categories || [];
 
   const selectedCategoryId = categoryId || categories[0]?.id;
   const renderCategoriesFilter = (

@@ -72,6 +72,15 @@ export async function removeCartProduct(cart_product_id: string) {
   return res?.data;
 }
 
+export async function clearCart() {
+  const res = await deleteData<any>(endpoints.cart.clear);
+
+  if ("error" in res) {
+    return res;
+  }
+  return res?.data;
+}
+
 export async function updateCartProduct(
   cart_product_id: string,
   quantity: number,
