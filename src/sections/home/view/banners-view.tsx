@@ -6,7 +6,8 @@ import BanarsSwiper from "../banars-swiper";
 
 export default async function BannersView() {
   const banarsRes = await fetchBanars();
-  const banars: Banar[] = "error" in banarsRes ? [] : banarsRes;
+  const banars: Banar[] =
+    !banarsRes || "error" in banarsRes ? [] : banarsRes;
 
   if (banars.length === 0) {
     return null;

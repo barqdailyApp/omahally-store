@@ -7,7 +7,9 @@ import CategoryGroupsList from "../category-groups-list";
 export default async function CategoriesView() {
   const categoryGroups = await fetchCategoryGroups();
   const groups: CategoryGroup[] =
-    "error" in categoryGroups ? [] : categoryGroups.section_categories;
+    !categoryGroups || "error" in categoryGroups
+      ? []
+      : (categoryGroups.section_categories ?? []);
 
   if (groups.length === 0) {
     return null;

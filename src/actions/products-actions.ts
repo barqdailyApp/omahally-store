@@ -101,7 +101,7 @@ export async function fetchProductsBySubCategory(
     return res;
   }
   return {
-    items: res?.data?.data,
+    items: res?.data?.data ?? [],
     pagesCount: Math.ceil(
       (res?.data?.meta?.itemCount || 0) / PRODUCTS_PER_PAGE,
     ),
@@ -126,7 +126,7 @@ export async function fetchProductsByBrand(brandId: string, page = 1) {
     return res;
   }
   return {
-    items: res?.data?.data,
+    items: res?.data?.data ?? [],
     pagesCount: Math.ceil(
       (res?.data?.meta?.itemCount || 0) / PRODUCTS_PER_PAGE,
     ),
@@ -157,7 +157,7 @@ export async function fetchFavoriteProducts(page = 1) {
     return res;
   }
   return {
-    items: res?.data?.data,
+    items: res?.data?.data ?? [],
     pagesCount: Math.ceil(
       (res?.data?.meta?.itemCount || 0) / PRODUCTS_PER_PAGE,
     ),
@@ -187,7 +187,7 @@ export async function fetchOffers(page = 1, limit = PRODUCTS_PER_PAGE) {
     return res;
   }
   return {
-    items: res?.data?.data,
+    items: res?.data?.data ?? [],
     pagesCount: Math.ceil(
       (res?.data?.meta?.itemCount || 0) / PRODUCTS_PER_PAGE,
     ),
@@ -238,7 +238,7 @@ export async function fetchProductsByCollection(
   }
 
   return {
-    items: res?.data?.data,
+    items: res?.data?.data ?? [],
     pagesCount: Math.ceil((res?.data?.meta?.itemCount || 0) / limit),
   };
 }
@@ -311,7 +311,7 @@ export async function fetchBrands() {
   if ("error" in res) {
     return res;
   }
-  return res?.data;
+  return res?.data ?? [];
 }
 
 export async function searchProducts(search: string) {
@@ -351,7 +351,7 @@ export async function fetchProducts(productName: string, page = "1") {
     return res;
   }
   return {
-    items: res?.data?.data,
+    items: res?.data?.data ?? [],
     pagesCount: Math.ceil(
       (res?.data?.meta?.itemCount || 0) / PRODUCTS_PER_PAGE,
     ),

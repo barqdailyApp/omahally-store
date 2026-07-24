@@ -13,7 +13,8 @@ const BrandsSwiper = dynamic(() => import("../brands-swiper"), {
 
 export default async function BrandsView() {
   const brandsRes = await fetchBrands();
-  const brands: Brand[] = "error" in brandsRes ? [] : brandsRes;
+  const brands: Brand[] =
+    !brandsRes || "error" in brandsRes ? [] : brandsRes;
 
   if (brands.length === 0) {
     return null;

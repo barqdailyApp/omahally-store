@@ -10,7 +10,7 @@ export async function fetchBanars() {
   if ("error" in res) {
     return res;
   }
-  return res?.data;
+  return res?.data ?? [];
 }
 
 export async function fetchPopupBanar() {
